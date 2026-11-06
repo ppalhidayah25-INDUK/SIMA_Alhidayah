@@ -32,29 +32,36 @@
     }
   ],
   "crons": [
-    { "path": "/api/sima/backup/cron", "schedule": "0 20 * * *" }
+    {
+      "path": "/api/sima/backup/cron",
+      "schedule": "0 20 * * *"
+    }
   ],
   "functions": {
-    "api/sima/[...path].js": {
+    "api/sima/*.js": {
       "maxDuration": 15
     }
   },
   "rewrites": [
     {
       "source": "/berita",
-      "destination": "/api/sima/pub/halaman/berita"
+      "destination": "/api/sima?__p=pub/halaman/berita"
     },
     {
       "source": "/berita/:slug",
-      "destination": "/api/sima/pub/halaman/berita/:slug"
+      "destination": "/api/sima?__p=pub/halaman/berita/:slug"
     },
     {
       "source": "/media/:file",
-      "destination": "/api/sima/pub/media/:file"
+      "destination": "/api/sima?__p=pub/media/:file"
     },
     {
       "source": "/sitemap.xml",
-      "destination": "/api/sima/pub/sitemap"
+      "destination": "/api/sima?__p=pub/sitemap"
+    },
+    {
+      "source": "/api/sima/:path*",
+      "destination": "/api/sima?__p=:path*"
     }
   ]
 }
