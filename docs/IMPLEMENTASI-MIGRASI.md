@@ -1,0 +1,7 @@
+# Panduan Migrasi Data Asli
+Menu: **Impor Data** (Super Admin). Urutan: Asrama → Kamar → Santri putra/putri → Alumni putra/putri → Pengurus putra/putri (jabatan, divisi, periode dibuat dulu di menu Pengurus) → Pengajar.
+Alur: 1) siapkan data sumber; 2) unduh template, sesuaikan kolom; 3) isi, kolom kuning wajib (NIS/nama dsb.); 4) unggah → **Periksa berkas**: sistem memeriksa format, kelengkapan, NIS dobel (di database dan di dalam berkas), relasi (asrama/kamar/jabatan harus sudah ada), kapasitas kamar, jenis kelamin vs asrama; 5) lihat pratinjau dan daftar masalah (unduh Excel); 6) perbaiki berkas lalu periksa ulang; 7) **buat backup**, lalu klik Impor dan konfirmasi; 8) hasil diverifikasi otomatis (jumlah baris tersimpan) dan tercatat di Riwayat impor serta Aktivitas Sistem.
+Arti status baris: **Lolos**; **Perlu diperbaiki** (tetap diimpor, mis. tahun masuk kosong); **Gagal** (tidak diimpor); **Duplikat** (dilewati, data lama tidak diubah).
+Aturan: impor atomik (satu transaksi, gagal sebagian = tidak ada yang tersimpan); tidak pernah menimpa atau menghapus data lama; maks. 5.000 baris dan 2,5 MB per berkas; pratinjau kedaluwarsa 24 jam; data pratinjau dihapus setelah selesai/dibatalkan. CSV: pemisah koma atau titik-koma, UTF-8. Format kolom NIS/telepon sebagai Teks agar angka 0 di depan tidak hilang.
+Dokumen sensitif (foto, KK) **tidak** diimpor lewat Excel; unggah per santri dari halaman detail.
+Batasan: pengajar tidak punya ID; kolom ID tidak ada. NIS wajib untuk santri/alumni. Hasil migrasi data asli: **belum ada** (data belum diserahkan).

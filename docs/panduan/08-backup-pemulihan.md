@@ -1,0 +1,2 @@
+# Backup dan Pemulihan (Super Admin)
+Pengaturan › Backup & Pemulihan. **Buat backup sekarang** membuat satu paket (database + berkas) dan memverifikasinya; status "Terverifikasi" hanya muncul bila checksum dan jumlah baris cocok. Jadwal otomatis dan retensi diatur di halaman yang sama (membutuhkan CRON_SECRET). Pemulihan: ketik PULIHKAN dan password; sistem membuat backup kondisi saat ini lebih dulu. Prosedur lengkap: `../PEMULIHAN.md`. Unduh backup berkala dan simpan di luar server.

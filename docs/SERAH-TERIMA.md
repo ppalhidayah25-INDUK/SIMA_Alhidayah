@@ -1,0 +1,12 @@
+# Daftar Periksa Serah Terima Super Admin
+- [ ] Set DATABASE_URL, CRON_SECRET, NODE_ENV=production di server (tanpa menaruhnya di repo)
+- [ ] `npm run migrate`, buat akun Super Admin dengan password kuat; tidak ada akun/data contoh
+- [ ] HTTPS dan domain aktif
+- [ ] Pengaturan › Kesiapan Produksi: semua "Siap"
+- [ ] Pengaturan › Konsistensi Data: tidak ada temuan
+- [ ] Isi Identitas Pondok
+- [ ] Buat backup, pastikan Terverifikasi; unduh salinan luar server (`npm run backup`)
+- [ ] Uji pemulihan di DB uji terpisah
+- [ ] Aktifkan backup otomatis; aktifkan PITR di penyedia DB
+- [ ] Jadwalkan upgrade dependensi (sharp, exceljs)
+- [ ] Beri persetujuan tertulis sebelum deploy produksi

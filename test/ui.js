@@ -1,0 +1,46 @@
+process.env.SIMA_BCRYPT_COST = '4';
+const { chromium } = require('playwright');
+const bcrypt = require('bcryptjs');
+const { createDev } = require('../dev-server');
+const { memoryDb } = require('../lib/sima/db');
+const B = 'http://127.0.0.1:3111';
+(async () => {
+  const db = await memoryDb(); const n = Date.now();
+  await db.q("INSERT INTO users (username,nama,password_hash,role,aktif,dibuat,diubah) VALUES ('admin','Admin Uji',$1,'super_admin',TRUE,$2,$2)", [bcrypt.hashSync('KataSandi-Kuat1', 4), n]);
+  const srv = (await createDev(db)).listen(3111);
+  const b = await chromium.launch(); const errs = [];
+  async function page(w, h) { const c = await b.newContext({ viewport: { width: w, height: h } }); const p = await c.newPage(); p.on('pageerror', e => errs.push(e.message)); p.on('console', m => m.type() === 'error' && !/Failed to load resource|ERR_/.test(m.text()) && errs.push(m.text())); return p; }
+  const PW = 'KataSandi-Kuat1';
+  let p = await page(1345, 820);
+  await p.goto(B + '/sima#/pengguna'); await p.waitForTimeout(500);
+  console.log('belum login ->', await p.locator('h2').first().textContent());
+  await p.screenshot({ path: '/tmp/s_login.png' });
+  await p.fill('#lgId', 'admin'); await p.fill('#lgPw', 'salah'); await p.click('button[type=submit]'); await p.waitForTimeout(500);
+  console.log('login salah ->', await p.locator('.note--bad').textContent());
+  await p.fill('#lgId', 'admin'); await p.fill('#lgPw', PW); await p.click('button[type=submit]'); await p.waitForSelector('.sb__nav'); await p.goto(B + '/sima#/dashboard'); await p.waitForSelector('.stats');
+  console.log('dashboard:', (await p.locator('.stat').allTextContents()).map(s => s.replace(/\s+/g, ' ')));
+  await p.screenshot({ path: '/tmp/s_dash.png', fullPage: true });
+  await p.goto(B + '/sima#/pengguna'); await p.waitForSelector('table'); await p.click('text=Tambah akun');
+  await p.fill('#nama', '<img src=x onerror=window.__xss=1>Bendahara'); await p.fill('#username', 'bendahara1'); await p.selectOption('#role', 'bendahara'); await p.fill('#password', 'lemah'); await p.click('.modal .btn:has-text("Simpan")'); await p.waitForTimeout(500);
+  console.log('password lemah ->', await p.locator('#passwordE').textContent());
+  await p.fill('#password', PW); await p.click('.modal .btn:has-text("Simpan")'); await p.waitForTimeout(800);
+  await p.click('text=Tambah akun'); await p.fill('#nama', 'Petugas Keamanan'); await p.fill('#username', 'keamanan1'); await p.selectOption('#role', 'keamanan'); await p.fill('#password', PW); await p.click('.modal .btn:has-text("Simpan")'); await p.waitForTimeout(800);
+  await p.click('text=Tambah akun');
+  console.log('pilihan role:', await p.locator('#role option').allTextContents(), '| XSS terpicu:', await p.evaluate(() => window.__xss === 1));
+  await p.click('.modal .btn:has-text("Batal")');
+  console.log('baris akun:', await p.locator('tbody tr').count());
+  await p.screenshot({ path: '/tmp/s_users.png', fullPage: true });
+  await p.goto(B + '/sima#/log'); await p.waitForSelector('table'); console.log('baris log:', await p.locator('tbody tr').count());
+  await p.goto(B + '/sima#/santri/putri'); await p.waitForTimeout(700); console.log('santri kosong ->', await p.locator('.empty b').first().textContent());
+  await p.goto(B + '/sima#/pendidikan'); await p.waitForTimeout(700); console.log('modul Tahap 2 ->', await p.locator('.empty b').first().textContent());
+  p = await page(1345, 820); await p.goto(B + '/sima/'); await p.fill('#lgId', 'keamanan1'); await p.fill('#lgPw', PW); await p.click('button[type=submit]'); await p.waitForSelector('.stats');
+  console.log('menu keamanan:', await p.locator('.sb__nav .nv span').allTextContents());
+  for (const r of ['#/pengguna', '#/log', '#/bendahara', '#/pengurus/putra', '#/asrama/putra', '#/pengaturan']) { await p.goto(B + '/sima' + r); await p.reload(); await p.waitForTimeout(800); console.log('Keamanan buka', r, '->', await p.locator('.empty b').first().textContent().catch(() => '(tidak ada)')); }
+  await p.goto(B + '/sima#/santri/putra'); await p.waitForTimeout(500); await p.screenshot({ path: '/tmp/s_kea.png' });
+  p = await page(390, 800); await p.goto(B + '/sima/'); await p.screenshot({ path: '/tmp/s_login_m.png' });
+  await p.fill('#lgId', 'admin'); await p.fill('#lgPw', PW); await p.click('button[type=submit]'); await p.waitForSelector('.stats');
+  console.log('ponsel overflow:', await p.evaluate(() => document.documentElement.scrollWidth - innerWidth));
+  await p.click('.top .iconbtn >> nth=0'); await p.waitForTimeout(500); await p.screenshot({ path: '/tmp/s_menu_m.png' });
+  await p.click('.scrim', { position: { x: 370, y: 400 } }); await p.waitForTimeout(400); await p.screenshot({ path: '/tmp/s_dash_m.png', fullPage: true });
+  console.log('error JS:', errs); await b.close(); srv.close(); await db.close(); process.exit(0);
+})();

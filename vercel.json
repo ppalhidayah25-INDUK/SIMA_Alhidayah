@@ -1,0 +1,60 @@
+{
+  "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/sima(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    }
+  ],
+  "crons": [
+    { "path": "/api/sima/backup/cron", "schedule": "0 20 * * *" }
+  ],
+  "functions": {
+    "api/sima/[...path].js": {
+      "maxDuration": 15
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/berita",
+      "destination": "/api/sima/pub/halaman/berita"
+    },
+    {
+      "source": "/berita/:slug",
+      "destination": "/api/sima/pub/halaman/berita/:slug"
+    },
+    {
+      "source": "/media/:file",
+      "destination": "/api/sima/pub/media/:file"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/sima/pub/sitemap"
+    }
+  ]
+}

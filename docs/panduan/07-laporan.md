@@ -1,0 +1,2 @@
+# Pusat Laporan
+Menu Laporan: pilih kelompok (Data Santri, Pengurus & Pengajar, Asrama, Bendahara, Keamanan, Pendidikan, Berita & Galeri), pilih laporan, atur filter, lalu **Tampilkan**, **Cetak**, **Unduh PDF**, atau **Unduh Excel**. Unduhan mengikuti filter. Layar menampilkan maksimal 2.000 baris (ada pemberitahuan); PDF/Excel memuat seluruh data. Setiap role hanya melihat kelompok yang menjadi wewenangnya. Kop memakai identitas di Pengaturan › Identitas Pondok.
