@@ -391,6 +391,11 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   min-height: clamp(620px, 125vh, 1120px);
   min-height: clamp(620px, 125svh, 1120px);
 }
+ /* HP: tinggi hero dikurangi agar video (16:9) tidak terlalu diperbesar/terpotong */
+@media (max-width: 700px) {
+.hero { min-height: clamp(440px, 62svh, 560px); }
+.hero__video { object-position: 50% 50%; }
+}
 /* Video hanya berjalan di hero; Visi-Misi dan section di bawahnya punya latar sendiri. */
 .stage { position: relative; }
 .stage__media { position: absolute; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; background: transparent; }
