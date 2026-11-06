@@ -1,4 +1,5 @@
 <title>Alhidayah Induk</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -367,8 +368,14 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 @media (min-width: 901px) and (max-width: 1020px) {
   .brand__text { display: none; }
 }
-@media (max-width: 420px) {
-  .brand__ar { font-size: 1.3rem; }
+@media (max-width: 900px) {
+  .brand { flex: 1 1 0; min-width: 0; margin-right: 6px; }
+  .brand__text { min-width: 0; }
+  .nav__toggle { flex: none; }
+}
+@media (max-width: 520px) {
+  .brand { gap: 8px; }
+  .brand__ar { font-size: clamp(.82rem, 4.4vw, 1.3rem); }
   .brand__lat { display: none; }
 }
 
