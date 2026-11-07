@@ -14447,3 +14447,88 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
   if (!page.hidden) load(false);
 })();
 </script>
+
+
+<!-- ===== MENU BAWAH HP (bottom navigation) — tempel di paling bawah index.html ===== -->
+<style>
+.bn { display: none; }
+@media (max-width: 700px) {
+  body { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 92px); }
+  .toast { bottom: calc(env(safe-area-inset-bottom, 0px) + 104px) !important; }
+  body:has(#navToggle[aria-expanded="true"]) .bn { transform: translate(-50%, 140%); opacity: 0; pointer-events: none; }
+  .bn {
+    --bn-glow: #4fe3b4;
+    display: block; position: fixed; z-index: 60; left: 50%;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+    width: min(calc(100vw - 24px), 440px); height: 72px;
+    transform: translateX(-50%); transition: transform 380ms var(--rise), opacity 240ms var(--ease);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .bn__bg { position: absolute; left: 0; right: 0; bottom: 0; height: 72px; display: flex; align-items: flex-end; pointer-events: none; filter: drop-shadow(0 10px 22px rgba(0, 0, 0, .35)); }
+  .bn__side { flex: 1; height: 58px; background: rgba(8, 28, 22, .92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255, 255, 255, .14); border-bottom: 0; position: relative; }
+  .bn__side::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--bn-glow); box-shadow: 0 0 10px 1px var(--bn-glow); animation: bnGlow 3.2s ease-in-out infinite; }
+  .bn__side--l { border-radius: 30px 0 0 30px; border-right: 0; }
+  .bn__side--r { border-radius: 0 30px 30px 0; border-left: 0; }
+  .bn__bump { width: 108px; height: 72px; flex: none; display: block; overflow: visible; }
+  .bn__bump path.fill { fill: rgba(8, 28, 22, .92); stroke: none; }
+  .bn__bump path.line { fill: none; stroke: var(--bn-glow); stroke-width: 2.2; filter: drop-shadow(0 0 5px var(--bn-glow)); animation: bnGlow 3.2s ease-in-out infinite; }
+  .bn__list { position: absolute; left: 0; right: 0; bottom: 0; height: 72px; margin: 0; padding: 0 6px; list-style: none; display: grid; grid-template-columns: 1fr 1fr 108px 1fr 1fr; align-items: end; }
+  .bn__item { display: flex; justify-content: center; }
+  .bn__a { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 100%; height: 58px; color: rgba(255, 255, 255, .82); text-decoration: none; font: 600 .68rem/1 var(--font-body); letter-spacing: .01em; overflow: hidden; border-radius: 22px; }
+  .bn__a svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform 320ms var(--rise), filter 320ms var(--ease); }
+  .bn__a:active svg { transform: scale(.82); }
+  .bn__a.is-on { color: #fff; }
+  .bn__a.is-on svg { transform: translateY(-3px); filter: drop-shadow(0 0 6px var(--bn-glow)); stroke: var(--bn-glow); }
+  .bn__a.is-on::after { content: ""; position: absolute; bottom: 7px; width: 4px; height: 4px; border-radius: 50%; background: var(--bn-glow); box-shadow: 0 0 8px var(--bn-glow); }
+  .bn__a .rp { position: absolute; border-radius: 50%; background: rgba(79, 227, 180, .35); transform: scale(0); animation: bnRip 520ms ease-out forwards; pointer-events: none; }
+  .bn__item--mid .bn__a { height: 66px; overflow: visible; gap: 4px; padding-top: 2px; }
+  .bn__item--mid .bn__a svg { width: 26px; height: 26px; stroke: #fff; animation: bnFloat 2.8s ease-in-out infinite; }
+  .bn__item--mid .bn__a::before { content: ""; position: absolute; top: 4px; width: 5px; height: 5px; border-radius: 50%; background: var(--bn-glow); box-shadow: 0 0 8px var(--bn-glow); animation: bnPulse 2s ease-in-out infinite; }
+  .bn__item--mid .bn__a::after { display: none; }
+  .bn__item--mid .bn__a.is-on svg { transform: none; }
+  @keyframes bnGlow { 0%, 100% { opacity: .75; } 50% { opacity: 1; } }
+  @keyframes bnFloat { 0%, 100% { transform: translateY(2px); } 50% { transform: translateY(-1px); } }
+  @keyframes bnPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.8); opacity: .4; } }
+  @keyframes bnRip { to { transform: scale(4); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .bn, .bn * { animation: none !important; transition: none !important; } }
+}
+</style>
+
+<nav class="bn" id="bn" aria-label="Menu cepat">
+  <div class="bn__bg" aria-hidden="true">
+    <div class="bn__side bn__side--l"></div>
+    <svg class="bn__bump" viewBox="0 0 108 72" preserveAspectRatio="none"><path class="fill" d="M0 72 L0 14 L12 14 C30 14 30 2 54 2 C78 2 78 14 96 14 L108 14 L108 72 Z"/><path class="line" d="M0 71 L12 71 C30 71 30 2 54 2 C78 2 78 71 96 71 L108 71"/></svg>
+    <div class="bn__side bn__side--r"></div>
+  </div>
+  <ul class="bn__list">
+    <li class="bn__item"><a class="bn__a" data-k="beranda" href="#beranda"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 3l9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>Beranda</span></a></li>
+    <li class="bn__item"><a class="bn__a" data-k="profil" href="#/profil/profil-pondok"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Profil</span></a></li>
+    <li class="bn__item bn__item--mid"><a class="bn__a" data-k="psb" href="https://psb-hidayahinduk.vercel.app/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>PSB</span></a></li>
+    <li class="bn__item"><a class="bn__a" data-k="berita" href="/berita"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg><span>Berita</span></a></li>
+    <li class="bn__item"><a class="bn__a" data-k="kontak" href="#/informasi/kontak"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><span>Kontak</span></a></li>
+  </ul>
+</nav>
+<script>
+(function () {
+  var bn = document.getElementById('bn'); if (!bn) return;
+  var links = bn.querySelectorAll('.bn__a');
+  function mark() {
+    var h = location.hash.toLowerCase(), k = 'beranda';
+    if (h.indexOf('#/profil') === 0) k = 'profil';
+    else if (h.indexOf('#/informasi') === 0) k = 'kontak';
+    else if (h.indexOf('#/') === 0) k = '';
+    Array.prototype.forEach.call(links, function (a) { a.classList.toggle('is-on', a.getAttribute('data-k') === k); });
+  }
+  Array.prototype.forEach.call(links, function (a) {
+    a.addEventListener('pointerdown', function (e) {
+      var r = a.getBoundingClientRect(), s = document.createElement('span'), d = 28;
+      s.className = 'rp'; s.style.width = s.style.height = d + 'px';
+      s.style.left = (e.clientX - r.left - d / 2) + 'px'; s.style.top = (e.clientY - r.top - d / 2) + 'px';
+      a.appendChild(s); setTimeout(function () { s.remove(); }, 560);
+    });
+  });
+  window.addEventListener('hashchange', mark); window.addEventListener('ppRoute', mark); mark();
+})();
+</script>
+
+
