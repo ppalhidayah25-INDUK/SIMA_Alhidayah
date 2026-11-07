@@ -14557,6 +14557,16 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
 })();
 </script>
 
+<!-- ===== PERBAIKAN HP: ilustrasi melayang di halaman lembaga kembali ke tengah — tempel di paling bawah index.html ===== -->
+<style>
+@keyframes swayPanggung { 0%, 100% { transform: rotateX(2deg) rotateY(-5deg); } 50% { transform: rotateX(-2deg) rotateY(5deg); } }
+@media (hover: none), (pointer: coarse) {
+  .am-scene, .tf-scene, .md-scene, .bl-scene, .as-scene, .pt-scene, .ek-scene, .jd-scene, .kt-scene, .lk-scene {
+    animation: swayPanggung 11s ease-in-out infinite !important;
+  }
+}
+</style>
+
 
 
 
