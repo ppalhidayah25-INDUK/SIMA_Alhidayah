@@ -14173,13 +14173,14 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
     var missing = [];
     if (!D.wa) missing.push('WhatsApp'); if (!D.telepon) missing.push('telepon'); 
     if (dr && missing.length) { dr.hidden = false; dr.textContent = 'Data ' + missing.join(', ') + ' belum diisi oleh admin dan akan tampil setelah tersedia.'; }
-    set('ktScene',
+   set('ktScene',
       '<div class="kt-layer kt-layer--orb"></div>' +
-      '<div class="kt-layer kt-layer--hub"><div class="kt-hub">' + icon('masjid') + '</div></div>' +
+      '<div class="kt-layer kt-layer--hub"><div class="kt-hub">' + icon('masjid') + '<img class="kt-hub__logo" src="images/logo.png" alt="Logo Pondok Pesantren Al Hidayah Induk" width="160" height="160" decoding="async"></div></div>' +
       '<div class="kt-layer kt-layer--i1"><div class="kt-ico">' + icon('chat') + '</div></div>' +
       '<div class="kt-layer kt-layer--i2"><div class="kt-ico">' + icon('tel') + '</div></div>' +
       '<div class="kt-layer kt-layer--i3"><div class="kt-ico">' + icon('pin') + '</div></div>' +
       '<div class="kt-layer kt-layer--i4"><div class="kt-ico">' + icon('mail') + '</div></div>');
+    (function () { var lg = document.querySelector('.kt-hub__logo'); if (lg) lg.addEventListener('error', function () { lg.remove(); }); })();
 
     // Kartu kontak
     set('ktKLead', 'Pilih cara yang paling nyaman untuk menghubungi kami.');
@@ -14655,7 +14656,11 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
 }
 </style>
 
-
+<!-- ===== LOGO DI TENGAH HALAMAN KONTAK — tempel di paling bawah index.html ===== -->
+<style>
+.kt-hub { overflow: hidden; }
+.kt-hub .kt-hub__logo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 14%; box-sizing: border-box; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff6dd, #f0dba3 70%, #d9bd73); }
+</style>
 
 
 
