@@ -10797,7 +10797,7 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
   // Halaman Struktur Pengurus Pondok
   // Isi nama asli pada "nama" dan foto pada "foto" (mis. images/pengurus/pengasuh.jpg). Kosong = placeholder seragam.
   // Anggota divisi bisa ditambah/dikurangi dengan menambah/menghapus objek pada array "anggota".
-  var STRUKTUR_PENGURUS = {
+    var STRUKTUR_PENGURUS = {
     catatan: 'Nama pengurus belum diisi. Ganti placeholder pada STRUKTUR_PENGURUS dengan nama dan foto pengurus yang sebenarnya.',
     pimpinan: [
       { jabatan: 'Pengasuh Pondok', nama: '', foto: '' },
@@ -10806,14 +10806,26 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
     ],
     administrasi: [
       { jabatan: 'Sekretaris', nama: '', foto: '' },
-      { jabatan: 'Bendahara', nama: '', foto: '' }
+      { jabatan: 'Bendahara 1', nama: '', foto: '' },
+      { jabatan: 'Bendahara 2', nama: '', foto: '' }
     ],
+    // Divisi ditampilkan 4 per baris. Tambah/hapus objek untuk mengubah daftar.
+    // koorLabel (opsional): tulisan jabatan koordinator, bawaannya "Koordinator".
     divisi: [
-      { nama: 'Divisi Keamanan', koordinator: { nama: '', foto: '' }, anggota: [{ nama: '', foto: '' }, { nama: '', foto: '' }] },
+      { nama: 'Keamanan Putra', koordinator: { nama: '', foto: '' }, anggota: [{ nama: '', foto: '' }, { nama: '', foto: '' }] },
+      { nama: 'Keamanan Putri', koordinator: { nama: '', foto: '' }, anggota: [{ nama: '', foto: '' }, { nama: '', foto: '' }] },
       { nama: 'Divisi Madrasah Diniyah', koordinator: { nama: '', foto: '' }, anggota: [{ nama: '', foto: '' }, { nama: '', foto: '' }] },
       { nama: 'Divisi Madrasah Qur’an', koordinator: { nama: '', foto: '' }, anggota: [{ nama: '', foto: '' }, { nama: '', foto: '' }] },
-      { nama: 'Divisi Media', koordinator: { nama: '', foto: '' }, anggota: [{ nama: '', foto: '' }, { nama: '', foto: '' }] }
-    ]
+      { nama: 'Divisi Media', koordinator: { nama: '', foto: '' }, anggota: [{ nama: '', foto: '' }, { nama: '', foto: '' }] },
+      { nama: 'Divisi Kesehatan', koordinator: { nama: '', foto: '' }, anggota: [{ nama: '', foto: '' }, { nama: '', foto: '' }] },
+      { nama: 'PJ Wethon', koorLabel: 'Penanggung Jawab', koordinator: { nama: '', foto: '' }, anggota: [{ nama: '', foto: '' }, { nama: '', foto: '' }] },
+      { nama: 'PJ Ekstrakurikuler', koorLabel: 'Penanggung Jawab', koordinator: { nama: '', foto: '' }, anggota: [{ nama: '', foto: '' }, { nama: '', foto: '' }] }
+    ],
+    // Paling bawah bagan
+    abdiDalem: {
+      nama: 'Abdi Dalem',
+      anggota: [{ nama: '', foto: '' }, { nama: '', foto: '' }, { nama: '', foto: '' }, { nama: '', foto: '' }]
+    }
   };
   (function () {
     var chart = document.getElementById('spChart');
@@ -10850,27 +10862,41 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
         if (i < d.pimpinan.length - 1) chart.appendChild(el('span', 'org__v'));
       });
       var lower = el('div', 'org__lower');
-      var adm = el('div', 'org__adm');
+      var adm = el('div', 'org__adm' + (d.administrasi.length > 2 ? ' org__adm--row' : ''));
       adm.appendChild(el('p', 'org__chip', 'Sekretariat dan Bendahara'));
       d.administrasi.forEach(function (p) { adm.appendChild(card(p, { jabatan: p.jabatan, kosong: 'Nama ' + p.jabatan + ' belum diisi' })); });
       lower.appendChild(adm);
       var dw = el('div', 'org__divwrap');
       dw.appendChild(el('p', 'org__chip', 'Divisi dan Bidang'));
-      var divs = el('div', 'org__divs');
-      d.divisi.forEach(function (v) {
-        var col = el('section', 'org__div'); col.appendChild(el('h3', '', v.nama));
-        col.appendChild(card(v.koordinator, { jabatan: 'Koordinator', divisi: v.nama, kosong: 'Nama Koordinator belum diisi', co: true, sm: true }));
-        col.appendChild(el('p', 'org__lbl', 'Anggota'));
-        var ul = el('ul', 'org__list');
-        v.anggota.forEach(function (a, i) { ul.appendChild(card(a, { jabatan: 'Anggota', divisi: v.nama, kosong: 'Nama Anggota ' + (i + 1) + ' belum diisi', sm: true, tag: 'li' })); });
-        col.appendChild(ul); divs.appendChild(col);
-      });
-      dw.appendChild(divs); lower.appendChild(dw);
+      // Divisi dibagi per 4 agar bagan tetap rapi saat jumlahnya banyak
+      for (var s = 0; s < d.divisi.length; s += 4) {
+        var divs = el('div', 'org__divs' + (s ? ' org__divs--next' : ''));
+        d.divisi.slice(s, s + 4).forEach(function (v) {
+          var col = el('section', 'org__div'); col.appendChild(el('h3', '', v.nama));
+          var kl = v.koorLabel || 'Koordinator';
+          col.appendChild(card(v.koordinator, { jabatan: kl, divisi: v.nama, kosong: 'Nama ' + kl + ' belum diisi', co: true, sm: true }));
+          col.appendChild(el('p', 'org__lbl', 'Anggota'));
+          var ul = el('ul', 'org__list');
+          v.anggota.forEach(function (a, i) { ul.appendChild(card(a, { jabatan: 'Anggota', divisi: v.nama, kosong: 'Nama Anggota ' + (i + 1) + ' belum diisi', sm: true, tag: 'li' })); });
+          col.appendChild(ul); divs.appendChild(col);
+        });
+        dw.appendChild(divs);
+      }
+      lower.appendChild(dw);
       chart.appendChild(lower);
+      // Abdi Dalem: paling bawah
+      if (d.abdiDalem) {
+        var ab = el('section', 'org__abdi');
+        ab.appendChild(el('h3', '', d.abdiDalem.nama || 'Abdi Dalem'));
+        var al = el('ul', 'org__list org__list--abdi');
+        d.abdiDalem.anggota.forEach(function (a, i) { al.appendChild(card(a, { jabatan: d.abdiDalem.nama || 'Abdi Dalem', kosong: 'Nama Abdi Dalem ' + (i + 1) + ' belum diisi', sm: true, tag: 'li' })); });
+        ab.appendChild(al); chart.appendChild(ab);
+      }
     }
     window.StrukturPengurus = { render: render };
     render(STRUKTUR_PENGURUS);
   })();
+
 
   // Halaman MI Al Hidayah (3D interaktif). Ubah data di MI_ALHIDAYAH; tampilan dibangun oleh render().
   var MI_ALHIDAYAH = {
@@ -14598,6 +14624,31 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
 })();
 </script>
 
+<!-- ===== STRUKTUR PENGURUS: gaya tambahan — tempel di paling bawah index.html ===== -->
+<style>
+/* Baris Sekretaris, Bendahara 1, Bendahara 2 */
+.org__adm.org__adm--row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; width: 100%; max-width: 900px; margin-inline: auto; padding-top: 70px; justify-items: center; }
+.org__adm.org__adm--row::before { top: 0; height: 36px; }
+.org__adm.org__adm--row::after { content: ""; position: absolute; top: 36px; left: calc((100% - 56px) / 6); right: calc((100% - 56px) / 6); height: 2px; background: rgba(0, 112, 74, .5); }
+.org__adm.org__adm--row > .pcard::after { display: none; }
+.org__adm.org__adm--row > .pcard::before { content: ""; position: absolute; top: -34px; left: 50%; right: auto; width: 2px; height: 34px; margin-left: -1px; background: rgba(0, 112, 74, .5); }
+.org__adm.org__adm--row > .pcard:nth-of-type(2)::after { display: block; content: ""; position: absolute; left: 50%; top: 100%; right: auto; bottom: auto; width: 2px; height: 56px; margin-left: -1px; background: rgba(0, 112, 74, .5); }
+/* Baris divisi kedua dst. */
+.org__divs--next { margin-top: 44px; }
+.org__divs--next::after { content: ""; position: absolute; top: -44px; left: 50%; width: 2px; height: 44px; margin-left: -1px; background: rgba(0, 112, 74, .5); }
+/* Abdi Dalem */
+.org__abdi { position: relative; width: 100%; max-width: 760px; margin: 64px auto 0; padding-top: 0; }
+.org__abdi::before { content: ""; position: absolute; left: 50%; top: -64px; width: 2px; height: 64px; margin-left: -1px; background: rgba(0, 112, 74, .5); }
+.org__abdi h3 { margin: 0 0 14px; padding: 10px 12px; border-radius: 10px; background: var(--card-dark); color: #fff; font-family: "Poppins", sans-serif; font-size: .92rem; font-weight: 600; text-align: center; }
+.org__list--abdi { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 1100px) { .org__divs--next::after { display: none; } .org__divs--next { margin-top: 28px; } }
+@media (max-width: 760px) {
+  .org__adm.org__adm--row { grid-template-columns: minmax(0, 290px); gap: 18px; padding-top: 64px; }
+  .org__adm.org__adm--row::before { height: 60px; }
+  .org__adm.org__adm--row::after, .org__adm.org__adm--row > .pcard::before, .org__adm.org__adm--row > .pcard:nth-of-type(2)::after { display: none; }
+  .org__list--abdi { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
 
 
 
