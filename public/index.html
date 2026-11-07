@@ -9866,59 +9866,38 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
   // Slider Social Media Posts
   // Daftar postingan: tambah, hapus, atau urutkan di sini. "url" diisi tautan resmi postingan Instagram (kosongkan bila belum ada).
   var INSTAGRAM_POSTS = [
-    // Cukup isi "url" dengan tautan postingan Instagram (Salin tautan dari postingan).
-    // Contoh bentuknya: { url: 'https://www.instagram.com/p/KODEPOSTINGAN/' },
-    // Baris yang url-nya masih kosong tampil sebagai kotak "belum diisi".
-    { url: 'https://www.instagram.com/p/De1cQwzCVvQ/?utm_source=ig_web_copy_link&psln=MzRlODBiNWFlZA==&srtk=MzRlODBiNWFlZA==' },
-    { url: 'https://www.instagram.com/reel/De4UcKpCD5F/?utm_source=ig_web_copy_link&obrf=MzRlODBiNWFlZA==&srtk=MzRlODBiNWFlZA==' },
-    { url: 'https://www.instagram.com/p/DeSrqK5EoTZ/?utm_source=ig_web_copy_link&vrfl=MzRlODBiNWFlZA==&srtk=MzRlODBiNWFlZA==' },
-    { url: 'https://www.instagram.com/p/Ddx7XBbHXPX/?utm_source=ig_web_copy_link&exln=MzRlODBiNWFlZA==&srtk=MzRlODBiNWFlZA==' },
-    { url: 'https://www.instagram.com/p/DZVHg_LnfmB/?utm_source=ig_web_copy_link&exln=MzRlODBiNWFlZA==&srtk=MzRlODBiNWFlZA==' },
-    { url: 'https://www.instagram.com/reel/DfRdoXpON2R/?utm_source=ig_web_copy_link&obrf=MzRlODBiNWFlZA==&srtk=MzRlODBiNWFlZA==' }
+    { image: 'images/instagram/post-01.webp', alt: 'Postingan Instagram 1', url: '' },
+    { image: 'images/instagram/post-02.webp', alt: 'Postingan Instagram 2', url: '' },
+    { image: 'images/instagram/post-03.webp', alt: 'Postingan Instagram 3', url: '' },
+    { image: 'images/instagram/post-04.webp', alt: 'Postingan Instagram 4', url: '' },
+    { image: 'images/instagram/post-05.webp', alt: 'Postingan Instagram 5', url: '' },
+    { image: 'images/instagram/post-06.webp', alt: 'Postingan Instagram 6', url: '' },
+    { image: 'images/instagram/post-07.webp', alt: 'Postingan Instagram 7', url: '' },
+    { image: 'images/instagram/post-08.webp', alt: 'Postingan Instagram 8', url: '' }
   ];
   (function () {
     var track = document.getElementById('igTrack');
     var prev = document.getElementById('igPrev');
     var next = document.getElementById('igNext');
     if (!track) return;
-    var igSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg>';
+    var igSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>';
     var phSvg = '<svg viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="18" y="18" width="60" height="60"/><rect x="18" y="18" width="60" height="60" transform="rotate(45 48 48)"/><circle cx="48" cy="48" r="14"/></svg>';
-    function igLink(u) {
-      var m = /^https?:\/\/(?:www\.)?instagram\.com\/(p|reel|reels|tv)\/([\w-]+)/i.exec(String(u || '').trim());
-      return m ? 'https://www.instagram.com/' + (m[1].toLowerCase() === 'reels' ? 'reel' : m[1].toLowerCase()) + '/' + m[2] + '/' : '';
-    }
 
     INSTAGRAM_POSTS.forEach(function (post, i) {
-      var num = ('0' + (i + 1)).slice(-2);
-      var link = igLink(post.url);
-      // Mode sematan resmi Instagram: tidak perlu unggah foto
-      if (link && !post.image) {
-        var ec = document.createElement('div');
-        ec.className = 'ig__card ig__card--embed';
-        ec.innerHTML = '<blockquote class="instagram-media" data-instgrm-permalink="' + link + '?utm_source=ig_embed" data-instgrm-version="14"><a href="' + link + '" target="_blank" rel="noopener noreferrer">Lihat postingan ' + num + ' di Instagram</a></blockquote>' +
-          '<a class="ig__ov" href="' + link + '" target="_blank" rel="noopener noreferrer" aria-label="Buka postingan ' + num + ' di Instagram" draggable="false"></a>';
-        track.appendChild(ec);
-        return;
-      }
       var hasUrl = !!post.url;
       var el = document.createElement(hasUrl ? 'a' : 'div');
       el.className = 'ig__card';
-      if (hasUrl) { el.href = post.url; el.target = '_blank'; el.rel = 'noopener noreferrer'; el.setAttribute('aria-label', (post.alt || 'Postingan Instagram') + ' (buka di Instagram)'); el.draggable = false; }
-      el.innerHTML = '<div class="ig__ph" aria-hidden="true">' + phSvg + '<strong>Postingan ' + num + '</strong><small>' + (post.image || 'Tautan Instagram belum diisi') + '</small></div>' +
+      if (hasUrl) { el.href = post.url; el.target = '_blank'; el.rel = 'noopener noreferrer'; el.setAttribute('aria-label', post.alt + ' (buka di Instagram)'); el.draggable = false; }
+      var num = ('0' + (i + 1)).slice(-2);
+      el.innerHTML = '<div class="ig__ph" aria-hidden="true">' + phSvg + '<strong>Postingan ' + num + '</strong><small>' + post.image + '</small></div>' +
         '<img class="ig__img" alt="" draggable="false" width="800" height="800" loading="lazy" decoding="async">' +
         '<span class="ig__badge" aria-hidden="true">' + igSvg + '</span>';
       var img = el.querySelector('.ig__img');
-      img.alt = post.alt || '';
+      img.alt = post.alt;
       img.addEventListener('error', function () { if (img.parentNode) img.parentNode.removeChild(img); });
-      if (post.image) img.src = post.image; else img.remove();
+      img.src = post.image;
       track.appendChild(el);
     });
-    // Muat skrip resmi Instagram untuk menampilkan sematan
-    if (track.querySelector('.instagram-media')) {
-      var proses = function () { if (window.instgrm && window.instgrm.Embeds) window.instgrm.Embeds.process(); };
-      if (window.instgrm && window.instgrm.Embeds) proses();
-      else { var sc = document.createElement('script'); sc.async = true; sc.src = 'https://www.instagram.com/embed.js'; sc.onload = proses; document.body.appendChild(sc); }
-    }
 
     var cards = function () { return Array.prototype.slice.call(track.children); };
     function step() {
@@ -14682,16 +14661,6 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
 .kt-hub .kt-hub__logo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 14%; box-sizing: border-box; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff6dd, #f0dba3 70%, #d9bd73); }
 </style>
 
-<!-- ===== INSTAGRAM: gaya kartu sematan — tempel di paling bawah index.html ===== -->
-<style>
-.ig__track { align-items: flex-start; }
-.ig__card--embed { flex: 0 0 330px; aspect-ratio: auto; background: #fff; border: 1px solid rgba(0, 0, 0, .1); }
-.ig__card--embed .instagram-media { margin: 0 !important; min-width: 0 !important; max-width: none !important; width: 100% !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
-.ig__card--embed > blockquote { padding: 16px; box-sizing: border-box; color: #333; font-size: .9rem; }
-.ig__card--embed > blockquote a { color: #00704a; }
-.ig__ov { position: absolute; inset: 0; z-index: 3; display: block; background: transparent; }
-@media (max-width: 700px) { .ig__card--embed { flex-basis: min(330px, 86vw); } }
-</style>
 
 
 
