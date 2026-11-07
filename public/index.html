@@ -14634,6 +14634,14 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
 /* Baris divisi kedua dst. */
 .org__divs--next { margin-top: 44px; }
 .org__divs--next::after { content: ""; position: absolute; top: -44px; left: 50%; width: 2px; height: 44px; margin-left: -1px; background: rgba(0, 112, 74, .5); }
+/* Baris divisi yang isinya kurang dari 4: garis penghubung menyesuaikan jumlah kolom */
+.org__divs:has(> .org__div:nth-child(1):last-child) { --n: 1; }
+.org__divs:has(> .org__div:nth-child(2):last-child) { --n: 2; }
+.org__divs:has(> .org__div:nth-child(3):last-child) { --n: 3; }
+@media (min-width: 1101px) {
+  .org__divs { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); }
+  .org__divs::before { left: calc((100% - (var(--n, 4) - 1) * var(--g)) / (2 * var(--n, 4))); right: calc((100% - (var(--n, 4) - 1) * var(--g)) / (2 * var(--n, 4))); }
+}
 /* Abdi Dalem */
 .org__abdi { position: relative; width: 100%; max-width: 760px; margin: 64px auto 0; padding-top: 0; }
 .org__abdi::before { content: ""; position: absolute; left: 50%; top: -64px; width: 2px; height: 64px; margin-left: -1px; background: rgba(0, 112, 74, .5); }
