@@ -14571,7 +14571,12 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
 <!-- ===== PERBAIKAN HP (Safari/iPhone): galeri dan kartu yang tidak muncul — tempel di paling bawah index.html ===== -->
 <style>
 @media (hover: none), (pointer: coarse) {
-  .js .reveal:not(.is-in) { transform: none !important; }
+  /* Di HP semua blok langsung terlihat (tanpa efek masuk 3D) */
+  .js .reveal, .js .reveal:not(.is-in) { opacity: 1 !important; transform: none !important; visibility: visible !important; }
+  .am-gc, .tf-gc, .md-gc, .bl-gc, .as-gc, .pt-gc, .ek-gc, .jd-gc, .kt-gc, .lk-gc,
+  .am-gf, .tf-gf, .md-gf, .bl-gf, .as-gf, .pt-gf, .ek-gf, .jd-gf, .kt-gf, .lk-gf {
+    opacity: 1 !important; transform: none !important; transform-style: flat !important; animation: none !important;
+  }
 }
 </style>
 <script>
@@ -14592,6 +14597,8 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
   window.addEventListener('load', function () { setTimeout(cek, 600); });
 })();
 </script>
+
+
 
 
 
