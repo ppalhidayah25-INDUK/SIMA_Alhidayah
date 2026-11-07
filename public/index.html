@@ -10797,7 +10797,7 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
   // Halaman Struktur Pengurus Pondok
   // Isi nama asli pada "nama" dan foto pada "foto" (mis. images/pengurus/pengasuh.jpg). Kosong = placeholder seragam.
   // Anggota divisi bisa ditambah/dikurangi dengan menambah/menghapus objek pada array "anggota".
-      var STRUKTUR_PENGURUS = {
+        var STRUKTUR_PENGURUS = {
     catatan: 'Nama pengurus belum diisi. Ganti placeholder pada STRUKTUR_PENGURUS dengan nama dan foto pengurus yang sebenarnya.',
     pimpinan: [
       { jabatan: 'Pengasuh Pondok', nama: '', foto: '' },
@@ -10896,9 +10896,6 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
     window.StrukturPengurus = { render: render };
     render(STRUKTUR_PENGURUS);
   })();
-(STRUKTUR_PENGURUS);
-  })();
-
 
   // Halaman MI Al Hidayah (3D interaktif). Ubah data di MI_ALHIDAYAH; tampilan dibangun oleh render().
   var MI_ALHIDAYAH = {
