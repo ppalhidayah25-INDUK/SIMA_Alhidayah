@@ -14557,6 +14557,7 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
 })();
 </script>
 
+
 <!-- ===== PERBAIKAN HP: ilustrasi melayang di halaman lembaga kembali ke tengah — tempel di paling bawah index.html ===== -->
 <style>
 @keyframes swayPanggung { 0%, 100% { transform: rotateX(2deg) rotateY(-5deg); } 50% { transform: rotateX(-2deg) rotateY(5deg); } }
@@ -14566,6 +14567,32 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
   }
 }
 </style>
+
+<!-- ===== PERBAIKAN HP (Safari/iPhone): galeri dan kartu yang tidak muncul — tempel di paling bawah index.html ===== -->
+<style>
+@media (hover: none), (pointer: coarse) {
+  .js .reveal:not(.is-in) { transform: none !important; }
+}
+</style>
+<script>
+(function () {
+  // Cadangan: jika pengamat scroll gagal memunculkan elemen, tampilkan elemen yang sudah masuk layar.
+  function cek() {
+    var h = window.innerHeight || 800;
+    Array.prototype.forEach.call(document.querySelectorAll('.reveal:not(.is-in)'), function (el) {
+      if (el.offsetParent === null) return;
+      var r = el.getBoundingClientRect();
+      if (r.top < h * 0.98 && r.bottom > 0) el.classList.add('is-in');
+    });
+  }
+  var t = 0;
+  window.addEventListener('scroll', function () { if (t) return; t = setTimeout(function () { t = 0; cek(); }, 100); }, { passive: true });
+  window.addEventListener('hashchange', function () { setTimeout(cek, 500); });
+  window.addEventListener('ppRoute', function () { setTimeout(cek, 500); });
+  window.addEventListener('load', function () { setTimeout(cek, 600); });
+})();
+</script>
+
 
 
 
