@@ -14711,3 +14711,44 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
 @media (min-width: 981px) { .kt-cards > .kt-card:last-child { grid-column: 1 / -1; } }
 </style>
 
+<!-- ===== FORMULIR KONTAK: pesan terkirim ke nomor pondok — tempel di paling bawah index.html ===== -->
+<script>
+(function () {
+  var NOMOR = '6285851319632'; // ganti di sini kalau nomor berubah (awali 62, tanpa 0/+/spasi)
+  var form = document.getElementById('ktForm');
+  if (!form || form.dataset.kirim) return;
+  form.dataset.kirim = '1';
+  var openedAt = Date.now(), lastSent = 0;
+  function $(id) { return document.getElementById(id); }
+  function bad(id, msg) {
+    var f = $(id).closest('.kt-f'); f.classList.toggle('is-bad', !!msg);
+    $(id + 'E').textContent = msg || ''; $(id).setAttribute('aria-invalid', msg ? 'true' : 'false'); return !msg;
+  }
+  function dg(v) { return String(v).replace(/\D/g, ''); }
+  var RULES = {
+    ktNama: function (v) { return v.length < 3 ? 'Nama lengkap wajib diisi (minimal 3 huruf).' : ''; },
+    ktWa: function (v) { var d = dg(v); return (d.length < 9 || d.length > 15) ? 'Masukkan nomor yang valid (9–15 digit).' : ''; },
+    ktEmail: function (v) { return v && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) ? 'Format email tidak valid.' : ''; },
+    ktSubjek: function (v) { return v.length < 3 ? 'Subjek pesan wajib diisi.' : ''; },
+    ktIsi: function (v) { return v.length < 10 ? 'Isi pesan wajib diisi (minimal 10 karakter).' : ''; }
+  };
+  function status(kind, msg) { var s = $('ktStatus'); s.hidden = false; s.className = 'kt-status is-' + kind; s.textContent = msg; }
+  // capture + stopImmediatePropagation: menggantikan cara lama (email)
+  form.addEventListener('submit', function (e) {
+    e.preventDefault(); e.stopImmediatePropagation();
+    var ok = true, first = null;
+    Object.keys(RULES).forEach(function (id) { if (!bad(id, RULES[id]($(id).value.trim()))) { ok = false; if (!first) first = id; } });
+    if (!ok) { status('err', 'Mohon periksa kembali kolom yang ditandai.'); $(first).focus(); return; }
+    if ($('ktWeb').value || Date.now() - openedAt < 3000) { status('err', 'Pesan tidak dapat diproses. Silakan coba lagi beberapa saat.'); return; }
+    if (Date.now() - lastSent < 30000) { status('err', 'Mohon tunggu sebentar sebelum mengirim pesan lagi.'); return; }
+    var em = $('ktEmail').value.trim();
+    var teks = 'Subjek: ' + $('ktSubjek').value.trim() + '\n\n' + $('ktIsi').value.trim() +
+      '\n\nNama: ' + $('ktNama').value.trim() + '\nNo. HP: ' + $('ktWa').value.trim() + (em ? '\nEmail: ' + em : '');
+    var href = 'https://wa.me/' + NOMOR + '?text=' + encodeURIComponent(teks);
+    lastSent = Date.now();
+    try { var a = document.createElement('a'); a.href = href; a.target = '_blank'; a.rel = 'noopener'; a.style.display = 'none'; document.body.appendChild(a); a.click(); a.remove(); } catch (er) {}
+    status('ok', 'Terima kasih. Pesan Anda sudah disiapkan, silakan lanjutkan pengiriman pada layar yang terbuka.');
+    form.reset(); openedAt = Date.now();
+  }, true);
+})();
+</script>
