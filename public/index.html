@@ -14170,7 +14170,7 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
     set('ktDesc', 'Hubungi pihak pondok melalui kontak resmi di bawah ini, atau kirim pesan langsung lewat formulir.');
     var dr = $('ktDraft');
     var missing = [];
-    if (!D.wa) missing.push('WhatsApp'); if (!D.telepon) missing.push('telepon'); 
+    if (!D.wa) missing.push('WhatsApp'); 
     if (dr && missing.length) { dr.hidden = false; dr.textContent = 'Data ' + missing.join(', ') + ' belum diisi oleh admin dan akan tampil setelah tersedia.'; }
    set('ktScene',
       '<div class="kt-layer kt-layer--orb"></div>' +
@@ -14186,7 +14186,6 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
     var empty = '<p class="kt-c__v pp-empty">Belum diisi</p>';
     var cards = [];
     cards.push({ ic: 'wa', t: 'WhatsApp', v: D.wa ? '+' + waNum() : '', b: btn('Hubungi via WhatsApp', 'https://wa.me/' + waNum(), !D.wa, true) });
-    cards.push({ ic: 'tel', t: 'Telepon', v: D.telepon || '', b: btn('Telepon Sekarang', 'tel:' + String(D.telepon).replace(/[^\d+]/g, ''), !D.telepon) });
     cards.push({ ic: 'mail', t: 'Email', v: D.email || '', b: btn('Kirim Email', 'mailto:' + D.email, !D.email) });
     cards.push({ ic: 'pin', t: 'Alamat Pondok', v: (D.namaAlamat ? '<strong>' + esc(D.namaAlamat) + '</strong><br>' : '') + esc(D.alamat), raw: true, b: btn('Lihat Lokasi', mapsView(), !D.alamat && !D.mapsUrl, true) });
     var so = socials();
@@ -14694,4 +14693,21 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
 })();
 </script>
 
+<!-- ===== KONTAK: media sosial berwarna + kartu terakhir selebar penuh — tempel di paling bawah index.html ===== -->
+<style>
+/* Tombol media sosial berwarna sesuai aplikasi */
+.kt-soc a, .kt-soc .kt-soc__off { color: #fff !important; border: 0 !important; opacity: 1 !important; box-shadow: 0 6px 14px rgba(0, 0, 0, .18); }
+.kt-soc a:hover, .kt-soc a:focus-visible { background-color: inherit; filter: brightness(1.1); transform: translateY(-3px) scale(1.05); }
+.kt-soc [aria-label^="Instagram"] { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important; }
+.kt-soc [aria-label^="TikTok"] { background: #010101 !important; box-shadow: -2px -2px 0 #25f4ee, 2px 2px 0 #fe2c55; }
+.kt-soc [aria-label^="YouTube"] { background: #ff0000 !important; }
+.kt-soc [aria-label^="WhatsApp"] { background: #25d366 !important; }
+.kt-soc [aria-label^="Facebook"] { background: #1877f2 !important; }
+.kt-soc [aria-label^="Telegram"] { background: #229ed9 !important; }
+.kt-soc [aria-label^="X"], .kt-soc [aria-label^="Twitter"] { background: #000 !important; }
+/* Belum diisi: tetap berwarna tapi lebih pudar */
+.kt-soc .kt-soc__off { opacity: .8 !important; border: 0 !important; }
+/* Setelah satu kartu dihapus: kartu terakhir (Media Sosial) selebar penuh di layar lebar */
+@media (min-width: 981px) { .kt-cards > .kt-card:last-child { grid-column: 1 / -1; } }
+</style>
 
