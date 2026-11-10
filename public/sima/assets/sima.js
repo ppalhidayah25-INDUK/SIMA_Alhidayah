@@ -247,13 +247,13 @@
         .then(function (r) { if (!r.ok) throw new Error(r.j.error || 'Login gagal.'); pw.value = ''; return boot(); })
         .catch(function (e) { err.hidden = false; err.textContent = e.message; b.disabled = false; b.textContent = 'Masuk'; pw.value = ''; pw.type = 'password'; pw.focus(); });
     } },
-      h('h2', { text: 'Masuk ke SIMA' }), h('p', { class: 'csub', text: 'Gunakan akun yang diberikan oleh Super Admin.' }), err,
+      h('h2', { text: 'Masuk ke SIMA' }), h('p', { class: 'csub', text: 'Selamat datang di Manajamen PP.Alhidayah Induk.' }), err,
       h('div', { class: 'lg__f' }, id, h('label', { for: 'lgId', text: 'Username atau email' })),
       h('div', { class: 'lg__f' }, pw, h('label', { for: 'lgPw', text: 'Password' }), eye), b);
     var bg = h('div', { class: 'lg__bg', 'aria-hidden': 'true' }, h('i', { class: 'lg__orb lg__orb--1' }), h('i', { class: 'lg__orb lg__orb--2' }), h('i', { class: 'lg__orb lg__orb--3' }));
     root.appendChild(h('div', { class: 'lg' }, bg,
       h('div', { class: 'lg__box' },
-        h('div', { class: 'lg__brand' }, h('div', { class: 'lg__logo' }, ico('mosque')), h('b', { text: 'Sistem Informasi Manajemen Al Hidayah' })),
+        h('div', { class: 'lg__brand' },   h('div', { class: 'lg__logo' }, h('img', { src: '/logo.png', alt: 'Logo Al Hidayah', onerror: function () { this.replaceWith(ico('mosque')); } })), h('b', { text: 'Sistem Informasi Manajemen Al Hidayah Induk' })),
         form, h('a', { class: 'lg__back', href: '/', text: '← Kembali ke website pondok' }))));
     id.focus();
   }
