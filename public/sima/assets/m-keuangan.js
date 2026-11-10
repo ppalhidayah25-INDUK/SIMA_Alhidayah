@@ -33,7 +33,7 @@
   function printNode() { document.body.classList.add('printing'); var done = function () { document.body.classList.remove('printing'); window.removeEventListener('afterprint', done); }; window.addEventListener('afterprint', done); setTimeout(function () { window.print(); if (!/Firefox/.test(navigator.userAgent)) setTimeout(done, 400); }, 50); }
 
   // ---------- navigasi atas ----------
-  var NAV = [['dashboard', 'Dashboard'], ['tagihan', 'Tagihan'], ['pembayaran', 'Pembayaran'], ['tunggakan', 'Tunggakan'], ['tabungan', 'Tabungan'], ['kas', 'Kas Pondok'], ['laporan', 'Laporan'], ['pengaturan', 'Kategori'], ['audit', 'Audit']];
+  var NAV = [['dashboard', 'Dashboard'], ['syahriah', 'Syahriah'], ['tagihan', 'Tagihan'], ['pembayaran', 'Pembayaran'], ['tunggakan', 'Tunggakan'], ['tabungan', 'Tabungan'], ['kas', 'Kas Pondok'], ['laporan', 'Laporan'], ['pengaturan', 'Kategori'], ['audit', 'Audit']];
   function nav(active) {
     var sa = X.S.user && X.S.user.role === 'super_admin';
     return h('nav', { class: 'tabs tabs--wrap', 'aria-label': 'Menu keuangan' }, NAV.filter(function (n) { return n[0] !== 'audit' || sa; }).map(function (n) { return h('a', { class: 'tab' + (n[0] === active ? ' is-on' : ''), href: R + n[0], text: n[1] }); }));
@@ -437,8 +437,69 @@
     function load() { api('GET', '/keuangan/audit' + qs({ page: pg, size: 25 })).then(function (d) { out.innerHTML = ''; out.appendChild(X.table([{ t: 'Waktu', f: function (a) { return X.fmtTime(a.waktu); } }, { t: 'Pengguna', k: 'username' }, { t: 'Objek', f: function (a) { return a.entitas + ' #' + a.entitas_id; } }, { t: 'Aksi', k: 'aksi' }, { t: 'Alasan', k: 'alasan' }, { t: 'Sebelum', f: function (a) { return a.sebelum ? JSON.stringify(a.sebelum) : null; } }, { t: 'Sesudah', f: function (a) { return a.sesudah ? JSON.stringify(a.sesudah) : null; } }], d.rows, empty('Belum ada catatan audit', '', 'list'))); if (d.total > d.size) out.appendChild(X.pager(d.total, d.page, d.size, function (p) { pg = p; load(); }, function () { })); }).catch(function (e) { out.innerHTML = ''; out.appendChild(X.errNote(e)); }); }
     P.body.appendChild(h('div', { class: 'tools tools--end' }, h('a', { class: 'btn btn--ghost', href: '/api/sima/keuangan/backup', download: '', text: 'Unduh cadangan data keuangan (JSON)' }))); P.body.appendChild(out); load(); return Promise.resolve(P.el);
   }
-
-  var VIEWS = { dashboard: viewDashboard, tagihan: viewTagihan, pembayaran: viewPembayaran, tunggakan: viewTunggakan, tabungan: viewTabungan, kas: viewKas, laporan: viewLaporan, pengaturan: viewPengaturan, audit: viewAudit };
+// ---------- Syahriah (pembayaran bulanan): tabel santri x bulan, klik sel untuk bayar ----------
+  var BLN_P = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+  function viewSyahriah(q) {
+    var P = page('syahriah', 'Pembayaran Syahriah', 'Pantau dan catat pembayaran bulanan setiap santri. Klik kotak bulan untuk membayar.'), out = h('div', { class: 'stack-s' });
+    var now = new Date().getFullYear(), st = { tahun: now, kategori_id: '', kelompok: '', q: '', page: 1 }, ref = null;
+    function St(l, v, n) { var x = X.stat(l, v, n); x.classList.add('stat--rp'); return x; }
+    function ok(n) { return Number(n || 0).toLocaleString('id-ID'); }
+    function load() {
+      out.innerHTML = ''; out.appendChild(h('p', { class: 'muted', text: 'Memuat…' }));
+      api('GET', '/keuangan/syahriah' + qs({ tahun: st.tahun, kategori_id: st.kategori_id, kelompok: st.kelompok, q: st.q, page: st.page })).then(function (d) {
+        out.innerHTML = ''; if (d.kategori_id) st.kategori_id = String(d.kategori_id);
+        if (!d.kategori_id) { out.appendChild(empty('Kategori Syahriah belum ada', 'Buka tab Kategori, klik "Muat kategori awal", lalu buat tagihan Syahriah di tab Tagihan.', 'wallet')); return; }
+        var r = d.ringkasan;
+        out.appendChild(h('div', { class: 'stats' }, [St('Total tagihan ' + d.tahun, 'Rp' + ok(r.nominal), r.tagihan + ' tagihan bulanan'), St('Sudah dibayar', 'Rp' + ok(r.dibayar), 'menurut tagihan tahun ini'), St('Belum dibayar', 'Rp' + ok(r.sisa), r.belum_lunas + ' tagihan belum lunas')]));
+        out.appendChild(h('p', { class: 'muted legend-sy' }, h('span', { class: 'sy sy--lunas', text: '✓' }), ' Lunas  ', h('span', { class: 'sy sy--sebagian', text: '…' }), ' Sebagian  ', h('span', { class: 'sy sy--belum', text: '!' }), ' Belum bayar  ', h('span', { class: 'sy sy--none', text: '–' }), ' Belum ada tagihan'));
+        if (!d.rows.length) { out.appendChild(empty('Tidak ada santri', 'Tidak ada santri aktif yang cocok dengan pencarian ini.', 'list')); return; }
+        var head = h('tr', null, h('th', { class: 'sy-name', text: 'Santri' }), BLN_P.map(function (b) { return h('th', { class: 'sy-h', text: b }); }));
+        var body = d.rows.map(function (s) {
+          return h('tr', null, h('td', { class: 'sy-name' }, h('b', { text: s.nama }), h('small', { text: [s.nis || 'NIS belum diisi', s.kelompok === 'putra' ? 'Putra' : 'Putri'].join(' · ') })),
+            BLN_P.map(function (b, i) {
+              var c = s.bulan[i + 1], cls = c ? c.status : 'none', txt = !c ? '–' : c.status === 'lunas' ? '✓' : c.status === 'sebagian' ? '…' : '!';
+              var tip = !c ? 'Belum ada tagihan ' + BLN[i] : BLN[i] + ' ' + d.tahun + ': ' + (c.status === 'lunas' ? 'lunas Rp' + ok(c.nominal) : 'sisa Rp' + ok(c.sisa) + ' dari Rp' + ok(c.nominal));
+              return h('td', { class: 'sy-c' }, h('button', { type: 'button', class: 'sy sy--' + cls, title: tip, 'aria-label': s.nama + ', ' + tip, text: txt, onclick: function () { klik(s, i, c, d.tahun); } }));
+            }));
+        });
+        out.appendChild(h('div', { class: 'tablewrap' }, h('table', { class: 'sy-table' }, h('thead', null, head), h('tbody', null, body))));
+        var pages = Math.max(1, Math.ceil(d.total / d.size));
+        out.appendChild(h('div', { class: 'tools tools--between' }, h('span', { class: 'muted', text: d.total + ' santri · halaman ' + d.page + ' dari ' + pages }),
+          h('div', { class: 'acts' }, btn('Sebelumnya', function () { st.page--; load(); }, { ghost: true, sm: true, disabled: d.page <= 1 }), btn('Berikutnya', function () { st.page++; load(); }, { ghost: true, sm: true, disabled: d.page >= pages }))));
+      }).catch(function (e) { out.innerHTML = ''; out.appendChild(X.errNote(e)); });
+    }
+    function klik(s, i, c, tahun) {
+      var judul = BLN[i] + ' ' + tahun;
+      if (!c) { X.modal('Belum ada tagihan', [h('p', { class: 'mtext', text: 'Tagihan Syahriah ' + judul + ' untuk ' + s.nama + ' belum dibuat. Buat tagihannya dulu di tab Tagihan (bisa untuk semua santri sekaligus).' })], function (close) { return [btn('Tutup', close, { ghost: true }), h('a', { class: 'btn', href: R + 'tagihan', text: 'Ke tab Tagihan', onclick: close })]; }); return; }
+      if (c.status === 'lunas') { toast(s.nama + ' — ' + judul + ' sudah lunas.'); return; }
+      loadRef().then(function (r) {
+        var nom = moneyInput('Nominal dibayar', {}); nom.set(c.sisa); var tgl = dateInput('Tanggal pembayaran', sticky.tanggal), met = selectEl(opts(r.metode), '— Pilih metode —'); met.value = sticky.metode || ''; var ket = textInput('Keterangan (opsional)', { max: 300 }), note = h('div', { class: 'note note--bad', hidden: true, role: 'alert' }), idem = token();
+        X.modal('Bayar Syahriah ' + judul, [h('p', { class: 'mtext' }, h('b', { text: s.nama }), ' — total Rp' + ok(c.nominal) + ', sudah dibayar Rp' + ok(c.dibayar) + ', sisa Rp' + ok(c.sisa) + '.'), h('div', { class: 'fs__grid' }, nom.el, tgl.el, field('Metode pembayaran *', met), ket.el), note], function (close) {
+          return [btn('Batal', close, { ghost: true }), btn('Simpan pembayaran', function (ev) {
+            note.hidden = true; var n = Number(nom.value());
+            if (!n || n <= 0) { note.hidden = false; note.textContent = 'Isi nominal pembayaran.'; return; } if (n > c.sisa) { note.hidden = false; note.textContent = 'Nominal melebihi sisa tagihan (Rp' + ok(c.sisa) + ').'; return; } if (!met.value) { note.hidden = false; note.textContent = 'Pilih metode pembayaran.'; return; }
+            X.confirmDialog({ title: 'Simpan pembayaran?', text: 'Mencatat pembayaran Rp' + ok(n) + ' untuk ' + s.nama + ' (' + judul + '). Yang sudah tersimpan tidak dapat diubah, hanya dibatalkan dengan alasan.', confirmLabel: 'Ya, simpan' }).then(function (cf) {
+              if (!cf) return; ev.target.disabled = true; sticky.tanggal = tgl.value(); sticky.metode = met.value;
+              api('POST', '/keuangan/pembayaran', { konfirmasi: true, idem: idem, tagihan_id: c.id, nominal: String(n), tanggal: tgl.value(), metode_id: met.value, keterangan: ket.value() }).then(function (d) {
+                toast('Pembayaran dicatat.'); close(); load(); if (d && d.id) showBukti('kuitansi', d.id);
+              }).catch(function (e) { ev.target.disabled = false; note.hidden = false; note.textContent = e.message; });
+            });
+          })];
+        });
+      }).catch(fail);
+    }
+    loadRef().then(function (r) {
+      var yr = []; for (var y = now + 1; y >= now - 4; y--) yr.push({ v: y, l: String(y) });
+      var ys = selectEl(yr, 'Tahun'); ys.firstChild.hidden = true; ys.value = String(now);
+      var ks = selectEl(opts(r.kategori_tagihan), 'Jenis tagihan (Syahriah)'), gs = selectEl([{ v: 'putra', l: 'Putra' }, { v: 'putri', l: 'Putri' }], 'Semua santri'), qi = h('input', { class: 'search', type: 'search', placeholder: 'Cari nama atau NIS', 'aria-label': 'Cari santri' }), t;
+      ys.onchange = function () { st.tahun = ys.value; st.page = 1; load(); }; ks.onchange = function () { st.kategori_id = ks.value; st.page = 1; load(); }; gs.onchange = function () { st.kelompok = gs.value; st.page = 1; load(); };
+      qi.oninput = function () { clearTimeout(t); t = setTimeout(function () { st.q = qi.value.trim(); st.page = 1; load(); }, 300); };
+      P.body.appendChild(h('div', { class: 'tools tools--start' }, ys, ks, gs, qi)); P.body.appendChild(out); load();
+    }).catch(function (e) { P.body.appendChild(X.errNote(e)); });
+    return Promise.resolve(P.el);
+  }
+   
+  var VIEWS = { dashboard: viewDashboard, syahriah: viewSyahriah, tagihan: viewTagihan, pembayaran: viewPembayaran, tunggakan: viewTunggakan, tabungan: viewTabungan, kas: viewKas, laporan: viewLaporan, pengaturan: viewPengaturan, audit: viewAudit };
   X.views.bendahara = function (p, q) { var k = p[0] || 'dashboard'; if (!VIEWS[k]) k = 'dashboard'; if (k === 'audit' && X.S.user.role !== 'super_admin') return Promise.resolve(X.denied()); if (k === 'tabungan') return viewTabungan(p.slice(1), q); return VIEWS[k](q || {}); };
   X.views.keuanganDashboard = function () { return viewDashboard({}); };
 })();
