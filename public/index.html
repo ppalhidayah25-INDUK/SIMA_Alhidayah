@@ -10254,12 +10254,12 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
     var gal = document.getElementById('ppGaleri');
     var lb = document.getElementById('ppLb'), lbImg = document.getElementById('ppLbImg'), lbCap = document.getElementById('ppLbCap');
     var lbIdx = -1, lastFocus = null;
-    function loaded() { return Array.prototype.filter.call(gal.querySelectorAll('.pp-tile'), function (t) { return !t.classList.contains('is-empty'); }); }
+     function loaded() { return Array.prototype.slice.call(gal.querySelectorAll('.pp-tile')); }
     function lbShow(i) {
       var list = loaded(); if (!list.length) return;
       lbIdx = (i + list.length) % list.length;
       var t = list[lbIdx];
-      lbImg.src = t.getAttribute('data-src'); lbImg.alt = t.getAttribute('data-cap') || ''; lbCap.textContent = t.getAttribute('data-cap') || '';
+      var kosong = t.classList.contains('is-empty'); if (kosong) lbImg.removeAttribute('src'); else lbImg.src = t.getAttribute('data-src'); lbImg.hidden = kosong; lbImg.alt = t.getAttribute('data-cap') || ''; lbCap.textContent = (t.getAttribute('data-cap') || '') + (kosong ? ' — foto belum tersedia' : '');
       var multi = list.length > 1; document.getElementById('ppLbP').hidden = !multi; document.getElementById('ppLbN').hidden = !multi;
     }
     function lbOpen(t) {
@@ -10284,7 +10284,7 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
         tile.querySelector('.pp-ph').style.display = 'none';
       });
       tile.appendChild(el('span', 'pp-cap', g.caption));
-      tile.addEventListener('click', function () { if (!tile.classList.contains('is-empty')) lbOpen(tile); });
+      tile.addEventListener('click', function () { lbOpen(tile); });
       li.appendChild(tile); gal.appendChild(li);
     });
     document.getElementById('ppLbX').addEventListener('click', lbClose);
@@ -14754,3 +14754,5 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
 </script>
 
 <style>.ek-facts { display: none !important; }</style>
+
+<style>.pp-tile.is-empty { cursor: zoom-in; } .pp-tile .pp-ph { transition: transform 700ms var(--ease); } .pp-tile.is-empty:hover .pp-ph, .pp-tile.is-empty:focus-visible .pp-ph { transform: scale(1.05); }</style>
