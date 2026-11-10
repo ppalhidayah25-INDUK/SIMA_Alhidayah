@@ -37,6 +37,7 @@
       "schedule": "0 20 * * *"
     }
   ],
+  "regions": ["sin1"],
   "functions": {
     "api/sima/*.js": {
       "maxDuration": 15
