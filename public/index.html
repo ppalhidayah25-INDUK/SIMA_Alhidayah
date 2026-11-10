@@ -12790,15 +12790,16 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
     function icon(n) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICON[n] || ICON.bintang) + '</svg>'; }
     var STAR = '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="18" y="18" width="64" height="64"/><rect x="18" y="18" width="64" height="64" transform="rotate(45 50 50)"/><circle cx="50" cy="50" r="14"/></svg>';
     // Buku pembelajaran: ilustrasi netral (bukan sampul resmi)
-    var SHELF = [
-      { w: 'clamp(72px,12vw,104px)', h: 'clamp(160px,27vw,236px)', c: ['#0d6a47', '#0a3d2b'] },
-      { w: 'clamp(78px,13vw,112px)', h: 'clamp(184px,31vw,268px)', c: ['#7a5a1b', '#4a3510'] },
-      { w: 'clamp(70px,11.6vw,100px)', h: 'clamp(150px,25vw,216px)', c: ['#0b5d63', '#063c40'] }
+     var SHELF = [
+      { w: 'clamp(72px,14.6vw,116px)', h: 'clamp(100px,20.3vw,161px)', c: ['#0d6a47', '#0a3d2b'], foto: 'images/kitab-bilqolam-1.jpg' },
+      { w: 'clamp(78px,15.8vw,126px)', h: 'clamp(108px,22vw,175px)', c: ['#7a5a1b', '#4a3510'], foto: 'images/kitab-bilqolam-2.jpg' },
+      { w: 'clamp(72px,14.6vw,116px)', h: 'clamp(100px,20.3vw,161px)', c: ['#0b5d63', '#063c40'], foto: 'images/kitab-bilqolam-3.jpg' },
+      { w: 'clamp(72px,14.6vw,116px)', h: 'clamp(100px,20.3vw,161px)', c: ['#0b5d63', '#063c40'], foto: 'images/kitab-bilqolam-4.jpg' }
     ];
     function shelf() {
       return '<div class="bl-sh__bob"><div class="bl-sh" role="img" aria-label="Ilustrasi buku pembelajaran Al-Qur’an">' + SHELF.map(function (b) {
         return '<div class="bl-book" style="--c:' + b.c[1] + ';--c2:' + b.c[0] + ';--w:' + b.w + ';--h:' + b.h + '">' +
-          '<div class="bl-bf bl-bf--front"><div class="bl-cv">' + STAR + '<strong>BILQOLAM</strong><small>Ilustrasi</small></div></div>' +
+          '<div class="bl-bf bl-bf--front"><div class="bl-cv">' + STAR + '<strong>BILQOLAM</strong><small>Ilustrasi</small></div>' + (b.foto ? '<img class="bl-cvimg" src="' + b.foto + '" alt="" loading="lazy" decoding="async">' : '') + '</div>' +
           '<div class="bl-bf bl-bf--back"></div><div class="bl-bf bl-bf--spine"><b>BILQOLAM</b></div><div class="bl-bf bl-bf--pages"></div><div class="bl-bf bl-bf--top"></div><div class="bl-bf bl-bf--bottom"></div></div>';
       }).join('') + '<span class="bl-plank" aria-hidden="true"></span></div></div>';
     }
@@ -12816,6 +12817,7 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
         '<div class="bl-layer bl-layer--orb"></div>' +
         '<div class="bl-layer bl-layer--shelf">' + shelf() + '</div>' +
         '<div class="bl-layer bl-layer--photo" id="blPhotoLayer" hidden><span class="bl-float"><span class="bl-pphoto" role="img" aria-label="' + esc(d.heroFotoKet) + '"><img id="blPhotoImg" alt=""></span></span></div>');
+      Array.prototype.forEach.call(document.querySelectorAll('#blScene .bl-cvimg'), function (im) { im.addEventListener('error', function () { im.remove(); }); });
       if (d.heroFoto) {
         var pi = document.getElementById('blPhotoImg');
         pi.addEventListener('load', function () { document.getElementById('blPhotoLayer').hidden = false; });
@@ -14751,3 +14753,4 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
 <style>.ek-facts { display: none !important; }</style>
 
 <style>.pp-tile.is-empty { cursor: zoom-in; } .pp-tile .pp-ph { transition: transform 700ms var(--ease); } .pp-tile.is-empty:hover .pp-ph, .pp-tile.is-empty:focus-visible .pp-ph { transform: scale(1.05); }</style>
+<style>.bl-cvimg { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; object-fit: cover; }</style>
