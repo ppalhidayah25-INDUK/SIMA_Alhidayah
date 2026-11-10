@@ -437,7 +437,8 @@
     function load() { api('GET', '/keuangan/audit' + qs({ page: pg, size: 25 })).then(function (d) { out.innerHTML = ''; out.appendChild(X.table([{ t: 'Waktu', f: function (a) { return X.fmtTime(a.waktu); } }, { t: 'Pengguna', k: 'username' }, { t: 'Objek', f: function (a) { return a.entitas + ' #' + a.entitas_id; } }, { t: 'Aksi', k: 'aksi' }, { t: 'Alasan', k: 'alasan' }, { t: 'Sebelum', f: function (a) { return a.sebelum ? JSON.stringify(a.sebelum) : null; } }, { t: 'Sesudah', f: function (a) { return a.sesudah ? JSON.stringify(a.sesudah) : null; } }], d.rows, empty('Belum ada catatan audit', '', 'list'))); if (d.total > d.size) out.appendChild(X.pager(d.total, d.page, d.size, function (p) { pg = p; load(); }, function () { })); }).catch(function (e) { out.innerHTML = ''; out.appendChild(X.errNote(e)); }); }
     P.body.appendChild(h('div', { class: 'tools tools--end' }, h('a', { class: 'btn btn--ghost', href: '/api/sima/keuangan/backup', download: '', text: 'Unduh cadangan data keuangan (JSON)' }))); P.body.appendChild(out); load(); return Promise.resolve(P.el);
   }
-// ---------- Syahriah (pembayaran bulanan): tabel santri x bulan, klik sel untuk bayar ----------
+
+  // ---------- Syahriah (pembayaran bulanan): tabel santri x bulan, klik sel untuk bayar ----------
   var BLN_P = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
   function viewSyahriah(q) {
     var P = page('syahriah', 'Pembayaran Syahriah', 'Pantau dan catat pembayaran bulanan setiap santri. Klik kotak bulan untuk membayar.'), out = h('div', { class: 'stack-s' });
@@ -489,15 +490,14 @@
       }).catch(fail);
     }
     loadRef().then(function (r) {
-      var yr = []; for (var y = now + 1; y >= now - 4; y--) yr.push({ v: y, l: String(y) });
-      var ys = selectEl(yr, 'Tahun'); ys.firstChild.hidden = true; ys.value = String(now);
+      var ys = h('input', { type: 'number', min: '2000', max: '2100', step: '1', value: String(now), placeholder: 'Tahun', 'aria-label': 'Tahun (ketik bebas, mis. 2028)', style: 'width:110px' });
       var ks = selectEl(opts(r.kategori_tagihan), 'Jenis tagihan (Syahriah)'), gs = selectEl([{ v: 'putra', l: 'Putra' }, { v: 'putri', l: 'Putri' }], 'Semua santri'), qi = h('input', { class: 'search', type: 'search', placeholder: 'Cari nama atau NIS', 'aria-label': 'Cari santri' }), t;
-      ys.onchange = function () { st.tahun = ys.value; st.page = 1; load(); }; ks.onchange = function () { st.kategori_id = ks.value; st.page = 1; load(); }; gs.onchange = function () { st.kelompok = gs.value; st.page = 1; load(); };
+      ys.onchange = function () { var v = parseInt(ys.value, 10); if (!(v >= 2000 && v <= 2100)) { toast('Tahun harus antara 2000 dan 2100.', true); ys.value = st.tahun; return; } st.tahun = v; st.page = 1; load(); }; ks.onchange = function () { st.kategori_id = ks.value; st.page = 1; load(); }; gs.onchange = function () { st.kelompok = gs.value; st.page = 1; load(); };
       qi.oninput = function () { clearTimeout(t); t = setTimeout(function () { st.q = qi.value.trim(); st.page = 1; load(); }, 300); };
       P.body.appendChild(h('div', { class: 'tools tools--start' }, ys, ks, gs, qi)); P.body.appendChild(out); load();
     }).catch(function (e) { P.body.appendChild(X.errNote(e)); });
     return Promise.resolve(P.el);
-  }
+  } 
    
   var VIEWS = { dashboard: viewDashboard, syahriah: viewSyahriah, tagihan: viewTagihan, pembayaran: viewPembayaran, tunggakan: viewTunggakan, tabungan: viewTabungan, kas: viewKas, laporan: viewLaporan, pengaturan: viewPengaturan, audit: viewAudit };
   X.views.bendahara = function (p, q) { var k = p[0] || 'dashboard'; if (!VIEWS[k]) k = 'dashboard'; if (k === 'audit' && X.S.user.role !== 'super_admin') return Promise.resolve(X.denied()); if (k === 'tabungan') return viewTabungan(p.slice(1), q); return VIEWS[k](q || {}); };
