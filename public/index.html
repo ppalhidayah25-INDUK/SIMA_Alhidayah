@@ -12468,16 +12468,14 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
     var STAR = '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="18" y="18" width="64" height="64"/><rect x="18" y="18" width="64" height="64" transform="rotate(45 50 50)"/><circle cx="50" cy="50" r="14"/></svg>';
     // Rak kitab kuning: ilustrasi netral (bukan sampul resmi)
     var SHELF = [
-      { w: 'clamp(44px,9.2vw,74px)', h: 'clamp(128px,26vw,196px)', c: ['#0d6a47', '#0a3d2b'] },
-      { w: 'clamp(40px,8.4vw,66px)', h: 'clamp(112px,22vw,170px)', c: ['#7a5a1b', '#4a3510'] },
-      { w: 'clamp(46px,9.6vw,78px)', h: 'clamp(140px,28vw,214px)', c: ['#6b2a2a', '#451818'] },
-      { w: 'clamp(40px,8.4vw,66px)', h: 'clamp(120px,24vw,184px)', c: ['#0b5d63', '#063c40'] },
-      { w: 'clamp(44px,9vw,72px)', h: 'clamp(132px,27vw,200px)', c: ['#25603f', '#123a25'] }
+      { w: 'clamp(72px,14.6vw,116px)', h: 'clamp(100px,20.3vw,161px)', c: ['#0d6a47', '#0a3d2b'], foto: 'images/madin/kitab-1.jpg' },
+      { w: 'clamp(78px,15.8vw,126px)', h: 'clamp(108px,22vw,175px)', c: ['#7a5a1b', '#4a3510'], foto: 'images/madin/kitab-2.jpg' },
+      { w: 'clamp(72px,14.6vw,116px)', h: 'clamp(100px,20.3vw,161px)', c: ['#6b2a2a', '#451818'], foto: 'images/madin/kitab-3.jpg' }
     ];
     function shelf() {
       return '<div class="md-sh__bob"><div class="md-sh" role="img" aria-label="Ilustrasi rak kitab kuning">' + SHELF.map(function (b) {
         return '<div class="md-book" style="--c:' + b.c[1] + ';--c2:' + b.c[0] + ';--w:' + b.w + ';--h:' + b.h + '">' +
-          '<div class="md-bf md-bf--front"><div class="md-cv">' + STAR + '<strong>KITAB</strong><small>Ilustrasi</small></div></div>' +
+          '<div class="md-bf md-bf--front"><div class="md-cv">' + STAR + '<strong>KITAB</strong><small>Ilustrasi</small></div>' + (b.foto ? '<img class="md-cvimg" src="' + b.foto + '" alt="" loading="lazy" decoding="async">' : '') + '</div>' +
           '<div class="md-bf md-bf--back"></div><div class="md-bf md-bf--spine"><b>KITAB</b></div><div class="md-bf md-bf--pages"></div><div class="md-bf md-bf--top"></div><div class="md-bf md-bf--bottom"></div></div>';
       }).join('') + '<span class="md-plank" aria-hidden="true"></span></div></div>';
     }
@@ -12494,6 +12492,7 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
         '<div class="md-layer md-layer--orb"></div>' +
         '<div class="md-layer md-layer--shelf">' + shelf() + '</div>' +
         '<div class="md-layer md-layer--photo" id="mdPhotoLayer" hidden><span class="md-float"><span class="md-pphoto" role="img" aria-label="' + esc(d.heroFotoKet) + '"><img id="mdPhotoImg" alt=""></span></span></div>');
+       Array.prototype.forEach.call(document.querySelectorAll('#mdScene .md-cvimg'), function (im) { im.addEventListener('error', function () { im.remove(); }); });
       if (d.heroFoto) {
         var pi = document.getElementById('mdPhotoImg');
         pi.addEventListener('load', function () { document.getElementById('mdPhotoLayer').hidden = false; });
