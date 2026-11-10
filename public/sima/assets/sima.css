@@ -370,3 +370,23 @@ tbody tr:hover { background: rgba(255, 255, 255, .08); }
 .kt-vid, .kt-th--none { color: var(--muted); }
 .kt-sel, .kt-up { border-color: rgba(255, 255, 255, .22); }
 .receipt { background: #fff; color: #111; } /* kuitansi tetap putih (untuk cetak) */
+
+/* ===== SYAHRIAH: tabel santri x bulan — tempel di PALING BAWAH sima.css ===== */
+.sy-table { border-collapse: separate; border-spacing: 0; min-width: 860px; width: 100%; }
+.sy-table th, .sy-table td { padding: 8px 6px; text-align: center; border-bottom: 1px solid var(--line); }
+.sy-table .sy-name { position: sticky; left: 0; z-index: 2; text-align: left; min-width: 190px; padding-left: 14px; background: #0b4a45; }
+.sy-table .sy-name small { display: block; color: var(--muted); font-weight: 400; }
+.sy-h { font-size: .74rem; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.sy { display: inline-grid; place-items: center; width: 38px; height: 34px; border-radius: 10px; border: 1.5px solid transparent; font-weight: 700; font-size: .95rem; cursor: pointer; font-family: inherit; color: #fff; }
+.legend-sy .sy { width: 26px; height: 24px; font-size: .8rem; cursor: default; }
+.sy--lunas { background: rgba(63, 191, 138, .35); border-color: #5fd9a0; color: #c9f5de; }
+.sy--sebagian { background: rgba(224, 192, 106, .3); border-color: #e0c06a; color: #f6e7b4; }
+.sy--belum { background: rgba(255, 120, 108, .28); border-color: #ff9a90; color: #ffd6d1; }
+.sy--none { background: rgba(255, 255, 255, .06); border-color: rgba(255, 255, 255, .16); color: var(--muted); }
+button.sy:hover { filter: brightness(1.2); transform: translateY(-1px); }
+button.sy:focus-visible { outline: 2px solid #b9ffd9; outline-offset: 2px; }
+
+/* Perbaikan umum: kolom cari/tanggal di bilah alat (Tools) tidak lagi putih */
+.shell, .modal, .toast { --card: rgba(255, 255, 255, .09); }
+.tools input[type=date], .tools input[type=datetime-local], .tools input[type=search], .fs__grid input[type=datetime-local], .fs__grid input[type=time] { background: rgba(255, 255, 255, .09); color: var(--ink); border-color: rgba(255, 255, 255, .22); }
+.tools .search { width: 260px; max-width: 100%; }
