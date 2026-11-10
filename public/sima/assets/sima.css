@@ -294,3 +294,7 @@ tr.mon--terlambat td { background: var(--badbg); } tr.mon--mendekat td { backgro
 /* Browser tanpa dukungan blur: kartu dibuat lebih pekat supaya tetap terbaca */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .lg__card { background: rgba(6, 56, 42, .88); } }
 @media (prefers-reduced-motion: reduce) { .lg__orb { animation: none; } .lg__f label, .lg__go { transition: none; } }
+
+/* ===== LOGO di login SIMA — tempel di PALING BAWAH sima.css ===== */
+.lg__logo { width: 84px; height: 84px; border-radius: 24px; padding: 8px; background: rgba(255, 255, 255, .92); border-color: rgba(255, 255, 255, .6); box-shadow: 0 14px 28px -14px rgba(0, 0, 0, .55); }
+.lg__logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
