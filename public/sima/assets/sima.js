@@ -223,29 +223,38 @@
   Object.assign(SIMA, { h: h, add: add, ico: ico, toast: toast, fmtTime: fmtTime, fmtDate: fmtDate, val: val, today: today, qs: qs, JK: JK, ORTU: ORTU, api: api, berkasUrl: berkasUrl, empty: empty, head: head, stat: stat, pill: pill, activePill: activePill, btn: btn, link: link, avatar: avatar,
     table: table, pager: pager, listView: listView, modal: modal, confirmDialog: confirmDialog, buildForm: buildForm, tabsView: tabsView, dl: dl, errNote: errNote, section: section, grid: grid, ready: false });
 
-  // ---------- login ----------
+// ---------- login ---------- (ganti SELURUH fungsi renderLogin lama dengan ini)
   function renderLogin(msg) {
     root.innerHTML = '';
-    var err = h('div', { class: 'note note--bad', role: 'alert', hidden: !msg, text: msg || '' });
-    var id = h('input', { id: 'lgId', name: 'identifier', type: 'text', autocomplete: 'username', required: true, maxlength: '120' });
-    var pw = h('input', { id: 'lgPw', name: 'password', type: 'password', autocomplete: 'current-password', required: true, maxlength: '200' });
-    var b = h('button', { class: 'btn', type: 'submit', text: 'Masuk' });
-    var form = h('form', { class: 'card', novalidate: true, onsubmit: function (e) {
+    var err = h('p', { class: 'lg__err', role: 'alert', hidden: !msg, text: msg || '' });
+    var id = h('input', { id: 'lgId', name: 'identifier', type: 'text', autocomplete: 'username', required: true, maxlength: '120', placeholder: ' ' });
+    var pw = h('input', { id: 'lgPw', name: 'password', type: 'password', autocomplete: 'current-password', required: true, maxlength: '200', placeholder: ' ' });
+    var EYE = '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>';
+    var EYE_OFF = '<path d="M3 3l18 18"/><path d="M10.6 5.1A10.6 10.6 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7a10 10 0 0 0 4.4-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>';
+    var eye = h('button', { class: 'lg__eye', type: 'button', 'aria-label': 'Tampilkan password', 'aria-pressed': 'false', onclick: function () {
+      var show = pw.type === 'password'; pw.type = show ? 'text' : 'password';
+      eye.setAttribute('aria-label', show ? 'Sembunyikan password' : 'Tampilkan password'); eye.setAttribute('aria-pressed', show ? 'true' : 'false');
+      eye.querySelector('svg').innerHTML = show ? EYE_OFF : EYE; pw.focus();
+    } });
+    eye.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' + EYE + '</svg>';
+    var b = h('button', { class: 'lg__go', type: 'submit', text: 'Masuk' });
+    var form = h('form', { class: 'lg__card', novalidate: true, onsubmit: function (e) {
       e.preventDefault();
       if (!id.value.trim() || !pw.value) { err.hidden = false; err.textContent = 'Username/email dan password wajib diisi.'; return; }
       b.disabled = true; b.textContent = 'Memeriksa…';
       fetch('/api/sima/auth/login', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier: id.value.trim(), password: pw.value }) })
         .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
         .then(function (r) { if (!r.ok) throw new Error(r.j.error || 'Login gagal.'); pw.value = ''; return boot(); })
-        .catch(function (e) { err.hidden = false; err.textContent = e.message; b.disabled = false; b.textContent = 'Masuk'; pw.value = ''; pw.focus(); });
+        .catch(function (e) { err.hidden = false; err.textContent = e.message; b.disabled = false; b.textContent = 'Masuk'; pw.value = ''; pw.type = 'password'; pw.focus(); });
     } },
       h('h2', { text: 'Masuk ke SIMA' }), h('p', { class: 'csub', text: 'Gunakan akun yang diberikan oleh Super Admin.' }), err,
-      h('div', { class: 'field' }, h('label', { for: 'lgId', text: 'Username atau email' }), id),
-      h('div', { class: 'field' }, h('label', { for: 'lgPw', text: 'Password' }), pw), b,
-      h('a', { href: '/', text: '← Kembali ke website pondok' }));
-    root.appendChild(h('div', { class: 'login' },
-      h('div', { class: 'login__art' }, h('div', { class: 'logo' }, ico('mosque')), h('h1', { text: 'Sistem Informasi Manajemen Al Hidayah' }), h('p', { text: 'Pusat administrasi Pondok Pesantren Al Hidayah Induk untuk santri, pengurus, asrama, keuangan, dan keamanan.' })),
-      h('div', { class: 'login__form' }, form)));
+      h('div', { class: 'lg__f' }, id, h('label', { for: 'lgId', text: 'Username atau email' })),
+      h('div', { class: 'lg__f' }, pw, h('label', { for: 'lgPw', text: 'Password' }), eye), b);
+    var bg = h('div', { class: 'lg__bg', 'aria-hidden': 'true' }, h('i', { class: 'lg__orb lg__orb--1' }), h('i', { class: 'lg__orb lg__orb--2' }), h('i', { class: 'lg__orb lg__orb--3' }));
+    root.appendChild(h('div', { class: 'lg' }, bg,
+      h('div', { class: 'lg__box' },
+        h('div', { class: 'lg__brand' }, h('div', { class: 'lg__logo' }, ico('mosque')), h('b', { text: 'Sistem Informasi Manajemen Al Hidayah' })),
+        form, h('a', { class: 'lg__back', href: '/', text: '← Kembali ke website pondok' }))));
     id.focus();
   }
 
