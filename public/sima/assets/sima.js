@@ -264,7 +264,7 @@
     root.innerHTML = '';
     var u = S.user;
     navEl = h('nav', { class: 'sb__nav', 'aria-label': 'Menu utama' });
-    var sb = h('aside', { class: 'sb', id: 'sidebar' }, h('div', { class: 'sb__brand' }, h('span', { class: 'sb__mark' }, ico('mosque')), h('div', { class: 'sb__name' }, 'SIMA', h('small', { text: 'Al Hidayah' }))), navEl);
+    var sb = h('aside', { class: 'sb', id: 'sidebar' }, h('div', { class: 'sb__brand' },   h('span', { class: 'sb__mark' }, h('img', { src: '/logo.png', alt: 'Logo Al Hidayah', onerror: function () { this.replaceWith(ico('mosque')); } })), h('div', { class: 'sb__name' }, 'SIMA', h('small', { text: 'Al Hidayah' }))), navEl);
     titleEl = h('div', { class: 'top__title', id: 'pageTitle', tabindex: '-1' });
     var toggle = h('button', { class: 'iconbtn', type: 'button', 'aria-label': 'Buka atau tutup menu', 'aria-controls': 'sidebar', onclick: function () {
       if (window.matchMedia('(max-width: 860px)').matches) shell.classList.toggle('is-open'); else { S.collapsed = !S.collapsed; shell.classList.toggle('is-collapsed', S.collapsed); }
