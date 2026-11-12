@@ -30,7 +30,7 @@
         { k: 'penempatan', label: 'Penempatan', options: [{ v: 'belum', l: 'Belum berkamar' }] }];
     }
     var cols;
-     if (isSA) cols = [
+    if (isSA) cols = [
       { t: 'No', f: function (r) { return r._no; }, cls: 'c-no' }, { t: 'Foto', f: function (r) { return X.avatar(r.foto_berkas, r.nama); } }, { t: 'NIS', k: 'nis', sort: 'nis' },
       { t: 'Nama lengkap', f: function (r) { return nameLink(r, 'santri'); }, sort: 'nama' }, { t: 'Jenis kelamin', f: function (r) { return X.JK[r.jenis_kelamin]; } },
       { t: 'Kamar', f: function (r) { return r.kamar || '—'; }, sort: 'kamar' }, { t: 'Status', f: statusPill, sort: 'status' },
@@ -67,6 +67,14 @@
   }
 
   // ================= FORMULIR SANTRI / ALUMNI =================
+  // ---- Pendidikan formal: jenjang (MI/MTS/MA) + kelas ----
+  var JENJANG = { MI: 6, MTS: 3, MA: 3 };
+  function parseFormal(t) {
+    var x = String(t || '').toUpperCase(), j = (x.match(/\b(MTS|MI|MA)\b/) || [])[1], k = (x.match(/\b([1-6])\b/) || [])[1];
+    return j ? { j: j, k: k && +k <= JENJANG[j] ? k : '' } : null;
+  }
+  function formalText(t) { var p = parseFormal(t); return p ? p.j + (p.k ? ' kelas ' + p.k : '') : (t || null); }
+
   function formSantri(id, kelDef, mode) {   // mode: 'santri' | 'alumni'
     var isAl = mode === 'alumni', wrap = h('div', { class: 'stack-g' });
     var load = id ? api('GET', '/' + mode + '/' + id) : Promise.resolve(null);
@@ -79,6 +87,17 @@
       var fId = X.fileField({ label: 'Dokumen identitas', pdf: true }), fLain = X.fileField({ label: 'Dokumen pendukung lainnya', pdf: true });
       var asramaSel = h('select', { id: 'selAsrama', 'aria-label': 'Asrama' }), kamarSel = h('select', { id: 'selKamar', 'aria-label': 'Kamar' });
       var kamarRows = [];
+      var pf = parseFormal(s.pendidikan_formal), pfLama = !!(s.pendidikan_formal && !pf);
+      var selJenjang = h('select', { id: 'selJenjang', 'aria-label': 'Pendidikan formal' }, h('option', { value: '', text: pfLama ? '— Isian lama: ' + s.pendidikan_formal + ' —' : '— Belum diisi —' }), Object.keys(JENJANG).map(function (j) { return h('option', { value: j, text: j }); }));
+      var selKelas = h('select', { id: 'selKelas', 'aria-label': 'Kelas' });
+      function fillKelas(keep) {
+        var j = selJenjang.value; selKelas.innerHTML = '';
+        selKelas.appendChild(h('option', { value: '', text: j ? '— Pilih kelas —' : 'Pilih jenjang dahulu' })); selKelas.disabled = !j;
+        for (var i = 1; j && i <= JENJANG[j]; i++) selKelas.appendChild(h('option', { value: String(i), text: 'Kelas ' + i }));
+        if (keep) selKelas.value = keep;
+      }
+      selJenjang.addEventListener('change', function () { fillKelas(''); });
+      if (pf) selJenjang.value = pf.j; fillKelas(pf ? pf.k : '');
       var A = [{ title: 'A. Identitas ' + (isAl ? 'Alumni' : 'Santri'), fields: [
         { k: 'nis', label: isAl ? 'NIS sebelumnya' : 'NIS (Nomor Induk Santri)', max: 30, help: 'Unik. Boleh dikosongkan bila belum ada.' }, { k: 'nama', label: 'Nama lengkap', required: true, max: 100 },
         { k: 'jenis_kelamin', label: 'Jenis kelamin', type: 'select', required: true, options: jkOpts(), help: isAl ? '' : 'Menentukan kategori Putra/Putri dan asrama yang boleh dipilih.' },
@@ -93,7 +112,7 @@
       if (!isAl) F.push({ k: '_st', label: 'Status santri', el: h('input', { value: 'Aktif', disabled: true }) }, { k: '_asr', label: 'Asrama', el: asramaSel }, { k: '_kmr', label: 'Kamar', el: kamarSel, help: 'Hanya kamar sesuai jenis kelamin dan masih ada kapasitas.' }, { k: 'catatan_admin', label: 'Catatan administrasi', type: 'textarea', max: 1000, full: true });
       else F.push({ k: 'asrama_terakhir', label: 'Asrama terakhir (jika tersedia)', max: 150 }, { k: 'program_terakhir', label: 'Program pendidikan terakhir', max: 150 });
       A.push({ title: isAl ? 'C2. Informasi Kepesantrenan' : 'F. Informasi Kepesantrenan', fields: F });
-      if (!isAl) A.push({ title: 'G. Informasi Pendidikan', fields: [{ k: 'pendidikan_formal', label: 'Pendidikan formal', max: 120 }, { k: 'lembaga_pendidikan', label: 'Lembaga pendidikan', max: 150 }, { k: 'program_pesantren', label: 'Program pendidikan pesantren yang diikuti', max: 150, full: true }] });
+      if (!isAl) A.push({ title: 'G. Informasi Pendidikan', fields: [{ k: '_jenjang', label: 'Pendidikan formal', el: selJenjang }, { k: '_kelas', label: 'Kelas', el: selKelas }, { k: 'lembaga_pendidikan', label: 'Lembaga pendidikan', max: 150 }, { k: 'program_pesantren', label: 'Program pendidikan pesantren yang diikuti', max: 150, full: true }] });
       if (!isAl) A.push({ title: 'H. Dokumen Pendukung', hint: 'Foto santri ada pada bagian A. Dokumen tambahan dapat dikelola juga dari tab Dokumen pada halaman detail.', fields: [{ k: '_doc1', label: 'Dokumen identitas (jika diperlukan)', el: fId.el, full: true }, { k: '_doc2', label: 'Dokumen pendukung lainnya', el: fLain.el, full: true }] });
       if (isAl) {
         var info = [{ k: 'catatan_alumni', label: 'Catatan tambahan', type: 'textarea', max: 1000, full: true }];
@@ -133,7 +152,7 @@
       var save = h('button', { class: 'btn', type: 'button', text: id ? 'Simpan perubahan' : isAl ? 'Simpan alumni' : 'Simpan santri' });
       save.addEventListener('click', function () {
         var v = form.values(), body = {}; Object.keys(v).forEach(function (k) { if (k.charAt(0) !== '_') body[k] = v[k]; });
-        if (!isAl) body.kamar_id = kamarSel.value || null;
+        if (!isAl) { body.kamar_id = kamarSel.value || null; body.pendidikan_formal = selJenjang.value ? selJenjang.value + (selKelas.value ? ' ' + selKelas.value : '') : (pfLama ? s.pendidikan_formal : ''); }
         top.hidden = true; form.errors({}); save.disabled = true; save.textContent = 'Menyimpan…';
         var req = id ? api('PATCH', '/' + mode + '/' + id, body) : api('POST', '/' + mode, body);
         req.then(function (r) {
@@ -192,7 +211,7 @@
   function ortuPanel(t, nama, kerja, st) { return X.section(t, X.dl([['Nama', nama], ['Pekerjaan', kerja], ['Status', st ? X.ORTU[st] : null]])); }
   function tabOrtu(s) { return X.grid([ortuPanel('Ayah', s.nama_ayah, s.pekerjaan_ayah, s.status_ayah), ortuPanel('Ibu', s.nama_ibu, s.pekerjaan_ibu, s.status_ibu), h('p', { class: 'muted', text: 'Status diisi berdasarkan keterangan wali dan tidak disimpulkan otomatis.' })]); }
   function tabWali(s) { return X.grid([X.section('Wali', X.dl([['Nama wali', s.nama_wali], ['Hubungan', s.wali_hubungan], ['Pekerjaan', s.wali_pekerjaan], ['Nomor telepon', s.wali_telepon], ['Alamat wali', s.wali_alamat, true]]))]); }
-  function tabPendidikan(s, isAl) { var p = [['Pendidikan formal', s.pendidikan_formal], ['Lembaga pendidikan', s.lembaga_pendidikan], ['Program pendidikan pesantren', s.program_pesantren, true]]; if (isAl) p.push(['Program pendidikan terakhir', s.program_terakhir, true]); return X.grid([X.section('Pendidikan', X.dl(p))]); }
+  function tabPendidikan(s, isAl) { var p = [['Pendidikan formal', formalText(s.pendidikan_formal)], ['Lembaga pendidikan', s.lembaga_pendidikan], ['Program pendidikan pesantren', s.program_pesantren, true]]; if (isAl) p.push(['Program pendidikan terakhir', s.program_terakhir, true]); return X.grid([X.section('Pendidikan', X.dl(p))]); }
 
   function docCard(title, berkas, actions) {
     var body = berkas ? [X.previewNode(X.berkasUrl(berkas.id), berkas.mime, berkas.nama_asli), h('small', { class: 'muted', text: [berkas.nama_asli, Math.round(berkas.ukuran / 1024) + ' KB', 'diunggah ' + X.fmtTime(berkas.diunggah)].join(' · ') }), h('div', { class: 'acts' }, h('a', { class: 'btn btn--ghost btn--sm', href: X.berkasUrl(berkas.id, true), text: 'Unduh' }), actions)] : [empty('Belum ada ' + title.toLowerCase(), 'Belum diunggah.', 'file'), h('div', { class: 'acts' }, actions)];
