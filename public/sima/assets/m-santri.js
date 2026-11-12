@@ -30,11 +30,10 @@
         { k: 'penempatan', label: 'Penempatan', options: [{ v: 'belum', l: 'Belum berkamar' }] }];
     }
     var cols;
-    if (isSA) cols = [
+     if (isSA) cols = [
       { t: 'No', f: function (r) { return r._no; }, cls: 'c-no' }, { t: 'Foto', f: function (r) { return X.avatar(r.foto_berkas, r.nama); } }, { t: 'NIS', k: 'nis', sort: 'nis' },
       { t: 'Nama lengkap', f: function (r) { return nameLink(r, 'santri'); }, sort: 'nama' }, { t: 'Jenis kelamin', f: function (r) { return X.JK[r.jenis_kelamin]; } },
-      { t: 'Tempat, tanggal lahir', f: ttl, sort: 'lahir' }, { t: 'Alamat', f: function (r) { return trunc(r.alamat); } }, { t: 'Nama ayah', k: 'nama_ayah' }, { t: 'Nama ibu', k: 'nama_ibu' }, { t: 'Nama wali', k: 'nama_wali' },
-      { t: 'Tahun masuk', k: 'tahun_masuk', sort: 'tahun_masuk' }, { t: 'Asrama', k: 'asrama', sort: 'asrama' }, { t: 'Kamar', k: 'kamar', sort: 'kamar' }, { t: 'Status', f: statusPill, sort: 'status' },
+      { t: 'Kamar', f: function (r) { return r.kamar || '—'; }, sort: 'kamar' }, { t: 'Status', f: statusPill, sort: 'status' },
       { t: 'Aksi', f: function (r) { return h('div', { class: 'acts' }, X.link('Detail', '#/santri/' + r.id, { sm: true }), !r.diarsipkan ? X.link('Ubah', '#/santri/' + r.id + '/ubah', { sm: true }) : null, btn(r.diarsipkan ? 'Pulihkan' : 'Arsipkan', function () { arsip(r, !r.diarsipkan); }, { ghost: true, sm: true })); } }];
     else {
       cols = [{ t: 'No', f: function (r) { return r._no; }, cls: 'c-no' }];
