@@ -13567,7 +13567,7 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
     ],
     kegiatan: [
       {
-        id: 'silat', cls: 'silat', tag: 'Silat', judul: 'Pencak Silat', kat: 'Bela diri dan karakter',
+        id: 'silat', cls: 'silat', tag: 'Silat', judul: 'Pencak Silat', kat: 'Bela diri dan karakter', pembina: 'Ust. Nama Pembina', jadwal: 'Setiap Malam Minggu',
         foto: 'images/ekstrakurikuler/pencak-silat-utama.jpg', fotoKet: 'ekstrakurikuler pencak silat santri',
         intro: [
           'Pencak silat adalah kegiatan ekstrakurikuler yang menjadi wadah pengembangan kemampuan bela diri, kedisiplinan, ketangkasan, keberanian, dan pembentukan karakter santri.',
@@ -13585,7 +13585,7 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
         ]
       },
       {
-        id: 'banjari', cls: 'banjari', tag: 'Banjari', judul: 'Seni Hadrah dan Banjari', kat: 'Seni islami',
+        id: 'banjari', cls: 'banjari', tag: 'Banjari', judul: 'Seni Hadrah dan Banjari', kat: 'Seni islami', pembina: 'Ust. Nama Pembina', jadwal: 'Setiap Malam Minggu',
         foto: 'images/ekstrakurikuler/banjari-utama.jpg', fotoKet: 'ekstrakurikuler banjari santri',
         intro: [
           'Banjari adalah wadah pengembangan seni islami melalui lantunan selawat dan seni musik hadrah.',
@@ -13603,7 +13603,7 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
         ]
       },
       {
-        id: 'tulis', cls: 'tulis', tag: 'Kepenulisan', judul: 'Kepenulisan dan Literasi', kat: 'Menulis dan berkarya',
+        id: 'tulis', cls: 'tulis', tag: 'Kepenulisan', judul: 'Kepenulisan dan Literasi', kat: 'Menulis dan berkarya', pembina: 'Ust. Nama Pembina', jadwal: 'Setiap Malam Minggu',
         foto: 'images/ekstrakurikuler/kepenulisan-utama.jpg', fotoKet: 'ekstrakurikuler menulis santri',
         intro: [
           'Kepenulisan adalah wadah bagi santri untuk mengembangkan kemampuan menulis, menuangkan gagasan, dan menghasilkan karya yang bermanfaat.',
@@ -13621,7 +13621,7 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
         ]
       },
       {
-        id: 'pidato', cls: 'pidato', tag: 'Public Speaking', judul: 'Public Speaking', kat: 'Berbicara dan tampil',
+        id: 'pidato', cls: 'pidato', tag: 'Public Speaking', judul: 'Public Speaking', kat: 'Berbicara dan tampil', pembina: 'Ust. Nama Pembina', jadwal: 'Setiap Malam Minggu',
         foto: 'images/ekstrakurikuler/public-speaking-utama.jpg', fotoKet: 'ekstrakurikuler public speaking santri',
         intro: [
           'Public Speaking adalah wadah untuk melatih kemampuan berbicara di depan umum, menyampaikan gagasan, dan membangun rasa percaya diri santri.',
@@ -13718,7 +13718,7 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
             '<div class="ek-art__media reveal ' + (flip ? 'ek-rv-r' : 'ek-rv-l') + '"><div class="ek-tilt" data-tilt><div class="ek-main" role="img" aria-label="' + esc(k.fotoKet) + '">' + photo(k.foto) + '<span class="ek-main__cap">' + esc(k.fotoKet) + '</span></div><span class="ek-glare"></span></div></div>' +
             '<div class="ek-art__text reveal ' + (flip ? 'ek-rv-l' : 'ek-rv-r') + '" style="--d:100ms"><span class="ek-art__no"><i>' + (n + 1) + '</i>' + esc(k.kat) + '</span><h2 id="ek-' + k.id + '-h">' + esc(k.judul) + '</h2>' +
               k.intro.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('') +
-              '<div class="ek-meta"><span><b>Pembina</b> · Belum diisi</span><span><b>Jadwal</b> · Belum diisi</span></div></div>' +
+              '<div class="ek-meta"><span><b>Pembina</b> · ' + esc(k.pembina || 'Belum diisi') + '</span><span><b>Jadwal</b> · ' + esc(k.jadwal || 'Belum diisi') + '</span></div></div>' +
           '</div>' +
           '<div class="ek-cols">' + [['Tujuan', k.tujuan, 'silat'], ['Manfaat', k.manfaat, 'banjari'], ['Aktivitas', k.aktivitas, 'tulis']].map(function (c, ci) {
             return '<div class="reveal ek-rv" style="--d:' + (ci * 80) + 'ms"><div class="ek-box" data-tilt><span class="ek-glare"></span><h3>' + c[0] + '</h3><ul>' + c[1].map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div></div>';
