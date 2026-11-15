@@ -50,6 +50,7 @@
               api('POST', '/impor/' + r.id + '/jalankan', { konfirmasi: true, lewati: true }).then(function (x) { out.innerHTML = ''; out.appendChild(h('section', { class: 'panel stack-s' }, h('h2', { text: 'Impor selesai' }), K.kv([['Jenis data', x.label], ['Berhasil disimpan', x.diimpor], ['Gagal (dilewati)', x.gagal], ['Duplikat (dilewati)', x.duplikat], ['Perlu diperbaiki (tetap diimpor)', x.peringatan], ['Verifikasi', x.verifikasi]]))); toast('Impor selesai: ' + x.diimpor + ' baris.'); loadHist(); }).catch(function (e) { ev.target.disabled = false; toast(e.message, true); });
             });
           }, { disabled: !imp }))));
+        try { out.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
       }
       function loadHist() {
         api('GET', '/impor').then(function (d) {
