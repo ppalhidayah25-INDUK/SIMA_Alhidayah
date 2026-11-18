@@ -38,5 +38,45 @@ a { color: var(--g7); } img { max-width: 100%; height: auto; } .sr { position: a
 .klb button { position: absolute; border: 0; background: rgba(255, 255, 255, .14); color: #fff; width: 46px; height: 46px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; } .klb .x { top: 16px; right: 16px; } .klb .p { left: 14px; top: 50%; } .klb .n { right: 14px; top: 50%; }
 @media (max-width: 640px) { .kg, .kg--u { grid-template-columns: 1fr; } .kh__in { justify-content: center; } .ka__f { flex-direction: column; align-items: flex-start; } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
-
 .kh__mark { width: 44px; height: 44px; } .kh__mark img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+/* ===== Footer: sama seperti beranda ===== */
+.foot { margin-top: 64px; background: #fff; color: #00482c; }
+.foot__info { background: #d7ebdc; padding-block: clamp(48px, 6vw, 84px); }
+.foot__grid { display: grid; grid-template-columns: 1.15fr .8fr 1.25fr; gap: clamp(32px, 6vw, 96px); max-width: 1180px; margin-inline: auto; }
+.foot__col { min-width: 0; }
+.foot__logo { display: inline-flex; align-items: center; gap: 12px; color: #00482c; text-decoration: none; }
+.foot__mark { flex: none; width: 52px; height: 52px; display: grid; place-items: center; } .foot__mark img { width: 100%; height: 100%; object-fit: contain; }
+.foot__brand { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; }
+.foot__ar { width: max-content; max-width: 100%; font-family: "Katibeh", "Aref Ruqaa", "Amiri", "Noto Naskh Arabic", serif; font-size: clamp(1.3rem, 1.9vw, 1.65rem); line-height: 1.3; white-space: nowrap; }
+.foot__lat { font-size: .66rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.foot__social { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 22px 0 0 -10px; padding: 0; }
+.foot__soc { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; color: #00482c; transition: color .26s, background-color .26s; }
+.foot__soc svg { width: 24px; height: 24px; } .foot__soc:hover, .foot__soc:focus-visible { color: #00693c; background: rgba(0, 105, 60, .12); }
+.foot__h { margin: 0 0 18px; font-size: 1.15rem; font-weight: 700; letter-spacing: .02em; color: #00482c; text-transform: uppercase; } .foot__h--c { text-transform: none; }
+.foot__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.foot__list a { display: inline-block; padding: 5px 0; color: #00482c; text-decoration: none; font-size: 1rem; transition: color .26s, transform .26s; } .foot__list a:hover, .foot__list a:focus-visible { color: #00693c; transform: translateX(4px); }
+.foot__addr { margin: 0; font-style: normal; font-size: 1rem; line-height: 1.7; } .foot__addr strong { display: block; font-weight: 600; }
+.foot__mailrow { margin: 18px 0 0; font-size: 1rem; } .foot__mail { color: #00482c; text-decoration: underline; text-decoration-color: rgba(0, 72, 44, .35); text-underline-offset: 3px; overflow-wrap: anywhere; } .foot__mail:hover { color: #00693c; }
+.foot__copy { background: #00482c; color: #fff; display: flex; align-items: center; justify-content: center; min-height: 64px; padding: 18px 16px; text-align: center; font-size: .92rem; } .foot__copy p { margin: 0; }
+@media (max-width: 960px) { .foot__grid { grid-template-columns: 1fr 1fr; } .foot__col--brand { grid-column: 1 / -1; } }
+@media (max-width: 600px) { .foot__grid { grid-template-columns: minmax(0, 1fr); gap: 32px; } .foot__list a { padding-block: 8px; } }
+
+/* ===== Tombol Bagikan: pil hijau yang membuka deretan ikon ===== */
+.ksh { position: relative; display: inline-grid; }
+.ksh > .ksh__btn, .ksh > .ksh__bar { grid-area: 1 / 1; }
+.ksh__btn { justify-self: start; display: inline-flex; align-items: center; gap: 10px; height: 54px; padding: 0 28px; border: 0; border-radius: 99px; background: linear-gradient(135deg, #00704a, #00573a); color: #fff; font: 600 1rem var(--body); cursor: pointer; box-shadow: 0 16px 28px -12px rgba(0, 72, 47, .75); transition: transform .35s cubic-bezier(.34, 1.56, .5, 1), opacity .25s, box-shadow .3s; }
+.ksh__btn svg { width: 20px; height: 20px; } .ksh__btn:hover { transform: translateY(-2px); box-shadow: 0 20px 30px -12px rgba(0, 72, 47, .8); } .ksh__btn:active { transform: scale(.96); }
+.ksh__bar { justify-self: start; display: flex; align-items: center; gap: 2px; height: 54px; padding: 0 10px; border-radius: 99px; background: var(--sf); border: 1px solid var(--ln); box-shadow: 0 18px 34px -14px rgba(0, 48, 31, .5); transform-origin: 0 50%; }
+.ksh__bar a, .ksh__bar button { width: 42px; height: 42px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--g7); cursor: pointer; transition: background .2s, transform .3s cubic-bezier(.34, 1.56, .5, 1); }
+.ksh__bar svg { width: 24px; height: 24px; } .ksh__bar a:hover, .ksh__bar button:hover, .ksh__bar a:focus-visible, .ksh__bar button:focus-visible { background: rgba(0, 112, 74, .12); transform: translateY(-3px) scale(1.1); }
+/* gerak hanya bila JavaScript aktif; tanpa JavaScript deretan ikon langsung tampil */
+.ksh:not(.ksh--js) .ksh__btn { display: none; }
+.ksh--js .ksh__bar { visibility: hidden; opacity: 0; transform: scale(.55); pointer-events: none; transition: transform .35s cubic-bezier(.4, 0, .2, 1), opacity .25s, visibility 0s linear .35s; }
+.ksh--js .ksh__bar > * { opacity: 0; transform: translateY(12px) scale(.4); transition: transform .3s, opacity .2s; }
+.ksh--js.is-open .ksh__btn { opacity: 0; transform: scale(.7); pointer-events: none; }
+.ksh--js.is-open .ksh__bar { visibility: visible; opacity: 1; transform: none; pointer-events: auto; transition: transform .45s cubic-bezier(.34, 1.4, .5, 1), opacity .25s, visibility 0s; }
+.ksh--js.is-open .ksh__bar > * { opacity: 1; transform: none; transition: transform .5s cubic-bezier(.34, 1.56, .5, 1) calc(var(--i) * 60ms + 110ms), opacity .3s calc(var(--i) * 60ms + 110ms), background .2s; }
+.ksh--js.is-open .ksh__bar > *:hover { transform: translateY(-3px) scale(1.1); transition-delay: 0s; }
+.ksh__tip { position: absolute; left: 0; bottom: calc(100% + 10px); padding: 6px 14px; border-radius: 99px; background: #00482c; color: #fff; font-size: .82rem; white-space: nowrap; opacity: 0; transform: translateY(6px); transition: opacity .25s, transform .25s; pointer-events: none; }
+.ksh__tip.is-on { opacity: 1; transform: none; }
