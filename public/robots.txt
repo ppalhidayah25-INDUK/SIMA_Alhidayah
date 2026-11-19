@@ -2,3 +2,5 @@ User-agent: *
 Allow: /
 Disallow: /sima
 Disallow: /api/
+
+Sitemap: https://www.ponpesalhidayahinduk.my.id/sitemap.xml
