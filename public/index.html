@@ -8075,6 +8075,7 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
         <button class="ig__nav ig__nav--next" id="igNext" type="button" aria-label="Postingan berikutnya"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
       </div>
     </div>
+    <div class="sec-more reveal"><a class="sec-btn" href="https://www.instagram.com/pondok_alhidayahinduk" target="_blank" rel="noopener noreferrer">Kunjungi Instagram<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
   </section>
   <!-- Berita Terkini: data ada di BERITA_TERKINI (script di bawah); nantinya bisa diganti hasil API/SIM lewat BeritaTerkini.render(daftar). -->
   <section class="news" id="berita" aria-labelledby="news-title">
@@ -8100,6 +8101,7 @@ a.ek-fact { display: block; text-decoration: none; color: inherit; }
     </svg>
     <div class="wrap">
       <ul class="vid__grid" id="vidGrid"></ul>
+      <div class="sec-more reveal"><a class="sec-btn" href="https://www.youtube.com/@Ponpes_alhidayah" target="_blank" rel="noopener noreferrer">Kunjungi YouTube<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
     </div>
   </section>
 </main>
@@ -14931,3 +14933,10 @@ var SEJARAH_AKUN = {
   sec.hidden = !any;
 })();
 </script>
+<style>
+.sec-more { display: flex; justify-content: center; margin-top: clamp(28px, 4vw, 48px); }
+.sec-btn, .sj-link { display: inline-flex; align-items: center; gap: 10px; padding: 13px 28px; border: 1.5px solid #00693c; border-radius: 999px; background: transparent; color: #00482c; text-decoration: none; font-weight: 600; font-size: .95rem; transition: background 320ms var(--ease), color 320ms var(--ease), border-color 320ms var(--ease); }
+.sec-btn svg { transition: transform 320ms var(--ease); }
+.sec-btn:hover, .sec-btn:focus-visible, .sj-link:hover, .sj-link:focus-visible { background: #00693c; color: #fff; border-color: #00693c; }
+.sec-btn:hover svg { transform: translateX(4px); }
+</style>
